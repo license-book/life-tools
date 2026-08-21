@@ -14,7 +14,7 @@ const faq = [
   ["원리금균등상환은 무엇인가요?", "대출기간 동안 원금과 이자를 합친 월 상환액이 거의 일정하도록 계산하는 방식입니다. 초반에는 이자 비중이 높고 시간이 지날수록 원금 비중이 커집니다."],
   ["원금균등상환은 무엇인가요?", "매달 갚는 원금을 동일하게 나누고 남은 원금에 대한 이자를 더하는 방식입니다. 첫 상환액이 상대적으로 크지만 시간이 지날수록 월 부담이 줄고 총이자는 원리금균등보다 적어지는 경우가 많습니다."],
   ["실제 은행 상환액과 차이가 날 수 있나요?", "네. 금융기관의 이자 계산일수, 납입일, 금리변동, 우대금리, 거치기간, 중도상환 등에 따라 실제 금액은 달라질 수 있습니다."],
-  ["상환계획표를 무료로 받을 수 있나요?", "네. 회원가입이나 이메일 입력 없이 전체 상환계획을 CSV 파일로 저장할 수 있습니다."],
+  ["상환계획표를 무료로 받을 수 있나요?", "네. 회원가입이나 이메일 입력 없이 전체 상환계획을 CSV로 저장하거나 브라우저 인쇄 기능을 이용해 PDF로 보관할 수 있습니다."],
 ] as const;
 
 export default function LoanCalculatorPage() {
@@ -46,7 +46,7 @@ export default function LoanCalculatorPage() {
         <section className="section">
           <div className="container">
             <h2>내 대출 조건으로 바로 계산해보세요</h2>
-            <p className="section-intro">대출금액, 연 이자율, 기간, 상환방식을 바꾸면 결과와 월별 상환계획이 즉시 다시 계산됩니다.</p>
+            <p className="section-intro">대출금액, 연 이자율, 기간을 바꾸면 두 상환방식의 결과와 월별 상환계획이 즉시 다시 계산됩니다.</p>
             <LoanCalculator />
           </div>
         </section>
@@ -76,8 +76,20 @@ export default function LoanCalculatorPage() {
         <section className="section">
           <div className="container">
             <h2>계산 예시</h2>
-            <p className="section-intro">예를 들어 3억원을 연 4.2%, 30년으로 대출받는 상황을 입력한 뒤 상환방식을 바꿔보면 월 상환 부담과 총이자 차이를 바로 비교할 수 있습니다.</p>
+            <p className="section-intro">예를 들어 3억원을 연 4.2%, 30년으로 대출받는 상황을 입력하면 원리금균등과 원금균등의 첫 달 상환액과 총이자 차이를 한 화면에서 비교할 수 있습니다.</p>
             <div className="notice">실제 대출 비교에서는 계산 결과와 함께 금융기관의 적용금리, 금리 유형(고정·변동·혼합), 중도상환수수료, 우대조건도 함께 확인하세요.</div>
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="container">
+            <h2>무료 상환계획표</h2>
+            <p className="section-intro">계산 결과를 단순히 화면에서 확인하는 데서 끝내지 않고 실제 계획 자료로 활용할 수 있게 제공합니다.</p>
+            <div className="grid">
+              <article className="card"><span className="category-label">CSV</span><h3>전체 회차 데이터 저장</h3><p>회차별 상환액·원금·이자·남은 원금을 전체 대출기간 기준으로 저장해 Excel 등에서 다시 정리할 수 있습니다.</p></article>
+              <article className="card"><span className="category-label">PRINT</span><h3>바로 인쇄</h3><p>입력폼과 불필요한 화면 요소를 제외하고 결과 요약과 전체 상환계획표가 인쇄되도록 구성했습니다.</p></article>
+              <article className="card"><span className="category-label">PDF</span><h3>브라우저에서 PDF 저장</h3><p>‘인쇄 · PDF 저장’을 누른 뒤 브라우저 인쇄창에서 PDF 저장을 선택하면 별도 프로그램이나 회원가입 없이 보관할 수 있습니다.</p></article>
+            </div>
           </div>
         </section>
 
@@ -86,16 +98,6 @@ export default function LoanCalculatorPage() {
             <h2>자주 묻는 질문</h2>
             <div className="grid">
               {faq.map(([question, answer]) => <article className="card" key={question}><h3>{question}</h3><p>{answer}</p></article>)}
-            </div>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="container">
-            <h2>무료 상환계획표</h2>
-            <div className="card">
-              <h3>계산 결과를 내 파일로 저장하세요</h3>
-              <p>계산 결과 영역의 ‘무료 상환계획표 CSV 저장’ 버튼을 누르면 전체 대출기간의 회차별 상환액·원금·이자·남은 원금을 회원가입 없이 저장할 수 있습니다.</p>
             </div>
           </div>
         </section>

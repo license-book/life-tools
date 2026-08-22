@@ -8,12 +8,13 @@ import { fuelCostTool, fuelEfficiencyTool, tripFuelCostTool, carLoanTool, owners
 import { buyBasicsTools } from "@/data/tools/buy-basics";
 import { workBasicsTools } from "@/data/tools/work-basics";
 import { lifeBasicsTools } from "@/data/tools/life-basics";
+import { lifeMoreTools } from "@/data/tools/life-more";
 
 export const tools: ToolDefinition[] = [
   loanCalculatorTool,vatCalculatorTool,depositInterestTool,savingsInterestTool,compoundInterestTool,discountTool,salaryNetTool,severanceTool,annualSalaryTool,wageConverterTool,
   areaPyeongTool,roomAreaTool,paintQuantityTool,wallpaperQuantityTool,tileQuantityTool,flooringQuantityTool,movingBoxTool,movingBudgetTool,sharedUtilityTool,electricityEstimatorTool,
   fuelCostTool,fuelEfficiencyTool,tripFuelCostTool,carLoanTool,ownershipCostTool,depreciationTool,evChargingCostTool,parkingCostTool,maintenanceBudgetTool,carExpenseSplitTool,
-  ...buyBasicsTools,...workBasicsTools,...lifeBasicsTools
+  ...buyBasicsTools,...workBasicsTools,...lifeBasicsTools,...lifeMoreTools
 ];
 
 export function getToolBySlug(slug:string){return tools.find(tool=>tool.slug===slug)}

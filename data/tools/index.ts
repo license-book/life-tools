@@ -7,6 +7,14 @@ import { areaPyeongTool, roomAreaTool, paintQuantityTool, wallpaperQuantityTool,
 import { fuelCostTool, fuelEfficiencyTool, tripFuelCostTool, carLoanTool, ownershipCostTool, depreciationTool, evChargingCostTool, parkingCostTool, maintenanceBudgetTool, carExpenseSplitTool } from "@/data/tools/car-basics";
 import { buyBasicsTools } from "@/data/tools/buy-basics";
 import { workBasicsTools } from "@/data/tools/work-basics";
-export const tools: ToolDefinition[] = [loanCalculatorTool,vatCalculatorTool,depositInterestTool,savingsInterestTool,compoundInterestTool,discountTool,salaryNetTool,severanceTool,annualSalaryTool,wageConverterTool,areaPyeongTool,roomAreaTool,paintQuantityTool,wallpaperQuantityTool,tileQuantityTool,flooringQuantityTool,movingBoxTool,movingBudgetTool,sharedUtilityTool,electricityEstimatorTool,fuelCostTool,fuelEfficiencyTool,tripFuelCostTool,carLoanTool,ownershipCostTool,depreciationTool,evChargingCostTool,parkingCostTool,maintenanceBudgetTool,carExpenseSplitTool,...buyBasicsTools,...workBasicsTools];
+import { lifeBasicsTools } from "@/data/tools/life-basics";
+
+export const tools: ToolDefinition[] = [
+  loanCalculatorTool,vatCalculatorTool,depositInterestTool,savingsInterestTool,compoundInterestTool,discountTool,salaryNetTool,severanceTool,annualSalaryTool,wageConverterTool,
+  areaPyeongTool,roomAreaTool,paintQuantityTool,wallpaperQuantityTool,tileQuantityTool,flooringQuantityTool,movingBoxTool,movingBudgetTool,sharedUtilityTool,electricityEstimatorTool,
+  fuelCostTool,fuelEfficiencyTool,tripFuelCostTool,carLoanTool,ownershipCostTool,depreciationTool,evChargingCostTool,parkingCostTool,maintenanceBudgetTool,carExpenseSplitTool,
+  ...buyBasicsTools,...workBasicsTools,...lifeBasicsTools
+];
+
 export function getToolBySlug(slug:string){return tools.find(tool=>tool.slug===slug)}
 export function getToolsByCategory(category:ToolDefinition["category"]){return tools.filter(tool=>tool.category===category)}

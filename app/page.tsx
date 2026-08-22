@@ -1,16 +1,19 @@
 import Link from "next/link";
 import SiteHeader from "@/components/layout/SiteHeader";
+import { getToolsByCategory } from "@/data/tools";
 
 const categories = [
-  ["MONEY", "돈과 금융", "대출·예적금·세금·목돈 계산"],
-  ["HOME", "집과 주거", "전월세·중개보수·이사·면적 계산"],
-  ["CAR", "자동차", "유지비·세금·할부·연료비 계산"],
-  ["BUY", "쇼핑", "할인·단가·할부·직구 비교"],
-  ["WORK", "직장", "급여·연봉·퇴직금·연차 계산"],
-  ["LIFE", "생활", "날짜·여행·생활비 계획"],
+  ["MONEY", "돈과 금융", "대출·예적금·세금·목돈 계산", "/money"],
+  ["HOME", "집과 주거", "전월세·중개보수·이사·면적 계산", "/home"],
+  ["CAR", "자동차", "유지비·세금·할부·연료비 계산", "/car"],
+  ["BUY", "쇼핑", "할인·단가·할부·직구 비교", "/buy"],
+  ["WORK", "직장", "급여·연봉·퇴직금·연차 계산", "/work"],
+  ["LIFE", "생활", "날짜·여행·생활비 계획", "/life"],
 ] as const;
 
 export default function HomePage() {
+  const moneyTools = getToolsByCategory("MONEY");
+
   return (
     <>
       <SiteHeader />
@@ -31,29 +34,32 @@ export default function HomePage() {
 
         <section className="section">
           <div className="container">
-            <h2>먼저 써볼 핵심 도구</h2>
-            <p className="section-intro">V1 첫 번째 도구부터 실제 생활 판단에 도움이 되는 상세 결과를 제공합니다.</p>
+            <h2>지금 바로 쓸 수 있는 MONEY 도구</h2>
+            <p className="section-intro">대출·예적금·세금·급여 계산까지 MONEY 도구 10개를 먼저 제공합니다.</p>
             <div className="grid">
-              <Link className="card" href="/tools/loan-calculator">
-                <span className="category-label">MONEY</span>
-                <h3>대출 이자·상환 계산기</h3>
-                <p>월 상환액, 총이자, 상환방식 비교와 전체 상환계획표를 확인하세요.</p>
-              </Link>
+              {moneyTools.slice(0, 6).map((tool) => (
+                <Link className="card" href={`/tools/${tool.slug}`} key={tool.slug}>
+                  <span className="category-label">MONEY</span>
+                  <h3>{tool.name}</h3>
+                  <p>{tool.shortDescription}</p>
+                </Link>
+              ))}
             </div>
+            <p style={{ marginTop: 18 }}><Link className="text-button" href="/money">MONEY 전체 10개 도구 보기 →</Link></p>
           </div>
         </section>
 
         <section className="section">
           <div className="container">
             <h2>생활 전반을 6개 카테고리로</h2>
-            <p className="section-intro">초기 30개에서 시작해 공통 TOOL 엔진으로 계속 확장합니다.</p>
+            <p className="section-intro">MONEY부터 시작해 HOME·CAR·BUY·WORK·LIFE로 계속 확장합니다.</p>
             <div className="grid">
-              {categories.map(([code, title, description]) => (
-                <article className="card" key={code}>
+              {categories.map(([code, title, description, href]) => (
+                <Link className="card" key={code} href={href}>
                   <span className="category-label">{code}</span>
                   <h3>{title}</h3>
                   <p>{description}</p>
-                </article>
+                </Link>
               ))}
             </div>
           </div>

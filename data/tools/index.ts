@@ -8,6 +8,7 @@ import {
   salaryNetTool,
   savingsInterestTool,
 } from "@/data/tools/money-basics";
+import { annualSalaryTool, severanceTool, wageConverterTool } from "@/data/tools/money-work";
 
 export const tools: ToolDefinition[] = [
   loanCalculatorTool,
@@ -17,6 +18,9 @@ export const tools: ToolDefinition[] = [
   compoundInterestTool,
   discountTool,
   salaryNetTool,
+  severanceTool,
+  annualSalaryTool,
+  wageConverterTool,
 ];
 
 export function getToolBySlug(slug: string) {

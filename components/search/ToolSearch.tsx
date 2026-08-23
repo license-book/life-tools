@@ -76,8 +76,6 @@ export default function ToolSearch({ compact = false, hero = false, onNavigate, 
         {hero && <button className={styles.searchButton} type="button" aria-label="검색" onMouseDown={(e)=>e.preventDefault()} onClick={()=>setFocused(true)}><SearchIcon/></button>}
       </div>
 
-      {hero && <div className={styles.heroPopular}><span>인기 검색어</span><div>{popular.map((word)=><button key={word} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>choosePopular(word)}># {word}</button>)}</div></div>}
-
       {open && query.trim() && <div className={styles.dropdown}>
         {results.length ? <div className={styles.results}>{results.map((tool)=><Link key={tool.slug} href={`/tools/${tool.slug}`} onClick={onNavigate}><span className={styles.resultText}><strong>{tool.name}</strong><small>{tool.category} · {tool.shortDescription}</small></span><span className={styles.detailLink}>바로 사용 →</span></Link>)}</div> : <div className={styles.empty}><strong>일치하는 생활도구가 없습니다.</strong><span>다른 검색어를 입력해보세요.</span></div>}
       </div>}

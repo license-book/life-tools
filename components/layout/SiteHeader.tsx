@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import styles from "./SiteHeader.module.css";
 
 const nav = [
-  ["MONEY", "/money"],
-  ["HOME", "/home"],
-  ["CAR", "/car"],
-  ["BUY", "/buy"],
-  ["WORK", "/work"],
-  ["LIFE", "/life"],
+  ["MONEY", "/money", "돈과 금융"],
+  ["HOME", "/home", "집과 주거"],
+  ["CAR", "/car", "자동차"],
+  ["BUY", "/buy", "쇼핑"],
+  ["WORK", "/work", "직장과 업무"],
+  ["LIFE", "/life", "일상과 생활"],
 ] as const;
 
 export default function SiteHeader() {
@@ -25,7 +26,7 @@ export default function SiteHeader() {
         </nav>
 
         <button
-          className={`mobile-menu-button${menuOpen ? " is-open" : ""}`}
+          className={`${styles.menuButton}${menuOpen ? ` ${styles.open}` : ""}`}
           type="button"
           aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
           aria-expanded={menuOpen}
@@ -40,14 +41,14 @@ export default function SiteHeader() {
 
       <nav
         id="mobile-category-menu"
-        className={`mobile-nav${menuOpen ? " is-open" : ""}`}
+        className={`${styles.mobileNav}${menuOpen ? ` ${styles.open}` : ""}`}
         aria-label="모바일 주요 카테고리"
       >
-        <div className="container mobile-nav-inner">
-          {nav.map(([label, href]) => (
+        <div className={`container ${styles.mobileNavInner}`}>
+          {nav.map(([label, href, description]) => (
             <Link key={label} href={href} onClick={() => setMenuOpen(false)}>
               <strong>{label}</strong>
-              <span>{label === "MONEY" ? "돈과 금융" : label === "HOME" ? "집과 주거" : label === "CAR" ? "자동차" : label === "BUY" ? "쇼핑" : label === "WORK" ? "직장과 업무" : "일상과 생활"}</span>
+              <span>{description}</span>
             </Link>
           ))}
         </div>

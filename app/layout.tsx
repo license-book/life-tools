@@ -4,6 +4,7 @@ import "./globals.css";
 import "./theme.css";
 import "./tool-hero-gradient.css";
 import "./category-landing.css";
+import "./hero-title-size.css";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],

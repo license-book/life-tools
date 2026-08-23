@@ -16,7 +16,7 @@ export default function MoneyPage() {
     <>
       <SiteHeader />
       <main>
-        <section className="hero">
+        <section className="hero category-hero">
           <div className="container">
             <span className="eyebrow">MONEY · 돈과 금융</span>
             <h1>생활 속 돈 계산을 한곳에서</h1>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import SiteHeader from "@/components/layout/SiteHeader";
+import ToolHeroIcon from "@/components/tools/ToolHeroIcon";
 import type { ToolDefinition } from "@/types/tool";
 import { createFaqJsonLd, createToolJsonLd } from "@/lib/tools/engine";
 import { getToolBySlug } from "@/data/tools";
@@ -21,6 +22,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
       <main>
         <section className="tool-hero">
           <div className="container">
+            <ToolHeroIcon tool={tool} />
             <span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span>
             <h1>{tool.name}</h1>
             <p>{tool.heroDescription}</p>

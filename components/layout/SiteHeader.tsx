@@ -15,15 +15,18 @@ const nav = [
   { label:"LIFE", href:"/life", description:"일상과 생활", tools:[["날짜·기간 계산기","/tools/date-period"],["나이·만나이 계산기","/tools/age-calculator"],["수면시간 계산기","/tools/sleep-time"],["여행 준비물 체크리스트","/tools/travel-packing-checklist"]] },
 ] as const;
 
+const overlayPaths = new Set(["/", "/money", "/home", "/car", "/buy", "/work", "/life"]);
+
 function CalculatorLogoIcon(){
   return <span className={styles.logoIcon} aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="5" y="3" width="22" height="26" rx="5"/><path d="M10 8h12v5H10z"/><path d="M11 18h2M19 18h2M11 23h2M19 23h2"/></svg></span>;
 }
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const supportsOverlay = overlayPaths.has(pathname);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -32,9 +35,13 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const overlay = isHome && !scrolled && !menuOpen;
+  const overlay = supportsOverlay && !scrolled && !menuOpen && !hovered;
 
-  return <header className={`header ${isHome ? styles.homeHeader : ""} ${overlay ? styles.overlayHeader : styles.solidHeader}`}>
+  return <header
+    className={`header ${supportsOverlay ? styles.homeHeader : ""} ${overlay ? styles.overlayHeader : styles.solidHeader}`}
+    onMouseEnter={()=>setHovered(true)}
+    onMouseLeave={()=>setHovered(false)}
+  >
     <div className="container header-inner">
       <Link className={`logo ${styles.brandLogo}`} href="/" onClick={()=>setMenuOpen(false)}><CalculatorLogoIcon/><span>생활도구</span></Link>
       <nav className="nav" aria-label="주요 카테고리">{nav.map((item)=><div className={styles.desktopNavItem} key={item.label}><Link className={styles.desktopNavLink} href={item.href}>{item.label}<span className={styles.chevron} aria-hidden="true">⌄</span></Link><div className={styles.submenu}><div className={styles.submenuHeading}><strong>{item.label}</strong><span>{item.description}</span></div><div className={styles.submenuLinks}>{item.tools.map(([toolLabel,toolHref])=><Link key={toolHref} href={toolHref}>{toolLabel}</Link>)}</div><Link className={styles.viewAll} href={item.href}>{item.label} 전체 도구 보기 →</Link></div></div>)}</nav>

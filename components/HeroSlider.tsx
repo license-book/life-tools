@@ -12,9 +12,8 @@ const slides = [
 
 const trustChipStyle = {
   color: "#fff",
-  background: "rgba(15,23,42,.28)",
-  borderColor: "rgba(255,255,255,.58)",
-  textShadow: "0 1px 3px rgba(15,23,42,.35)",
+  background: "rgba(15,23,42,.18)",
+  borderColor: "rgba(255,255,255,.62)",
 };
 
 export default function HeroSlider() {
@@ -32,8 +31,8 @@ export default function HeroSlider() {
       <div className={styles.heroOverlay} style={{ zIndex: 30, overflow: "visible" }}>
         <div className={`container ${styles.heroOverlayInner}`} style={{ overflow: "visible" }}>
           <div className={styles.heroCopy} style={{ position: "relative", zIndex: 40, overflow: "visible" }}>
-            <h1 style={{ color: "#fff", textShadow: "0 2px 8px rgba(15,23,42,.28)", marginTop: 0 }}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
-            <p className={styles.heroLead} style={{ color: "#fff", textShadow: "0 1px 5px rgba(15,23,42,.35)", whiteSpace: "nowrap" }}>생활에 필요한 계산과 비교 도구를 회원가입 없이 바로 사용하세요.</p>
+            <h1 style={{ color: "#fff", marginTop: 0 }}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
+            <p className={styles.heroLead} style={{ color: "#fff", whiteSpace: "nowrap" }}>생활에 필요한 계산과 비교 도구를 회원가입 없이 바로 사용하세요.</p>
             <ToolSearch hero />
             <div className="trust-row" aria-label="생활도구 주요 특징">
               <span className="trust-chip" style={trustChipStyle}>✓ 무료</span>

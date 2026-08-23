@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import "./theme.css";
 import "./tool-hero-gradient.css";
+import "./category-landing.css";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],

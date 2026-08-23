@@ -29,10 +29,10 @@ export default function HeroSlider() {
   const move = (dir: number) => setActive((v) => (v + dir + slides.length) % slides.length);
 
   return (
-    <div className={styles.heroSlider}>
-      <div className={styles.heroOverlay}>
-        <div className={`container ${styles.heroOverlayInner}`}>
-          <div className={styles.heroCopy}>
+    <div className={styles.heroSlider} style={{ overflow: "visible", zIndex: 1 }}>
+      <div className={styles.heroOverlay} style={{ zIndex: 30, overflow: "visible" }}>
+        <div className={`container ${styles.heroOverlayInner}`} style={{ overflow: "visible" }}>
+          <div className={styles.heroCopy} style={{ position: "relative", zIndex: 40, overflow: "visible" }}>
             <span className={styles.kicker}>생활 계산을 더 간단하게</span>
             <h1 style={{ color: "#fff", textShadow: "0 2px 8px rgba(15,23,42,.28)" }}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
             <p className={styles.heroLead} style={{ color: "#fff", textShadow: "0 1px 5px rgba(15,23,42,.35)" }}>돈, 집, 자동차, 쇼핑, 직장, 일상까지. 자주 필요한 계산과 비교 도구를 회원가입 없이 바로 사용할 수 있습니다.</p>
@@ -51,7 +51,7 @@ export default function HeroSlider() {
         </div>
       </div>
 
-      <div className={styles.heroMedia}>
+      <div className={styles.heroMedia} style={{ position: "relative", zIndex: 1 }}>
         <div className={styles.heroTrack} style={{ transform: `translateX(-${active * 100}%)` }}>
           {slides.map((slide) => (
             <div className={styles.heroSlide} key={slide.src}>

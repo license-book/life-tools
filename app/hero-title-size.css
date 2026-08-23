@@ -1,0 +1,1 @@
+.category-hero h1{font-size:clamp(2rem,4.1vw,3.45rem);line-height:1.1;letter-spacing:-.052em}.category-hero p{font-size:1.02rem}@media(max-width:820px){.category-hero h1{font-size:clamp(1.9rem,7vw,2.8rem)}}@media(max-width:560px){.category-hero h1{font-size:clamp(1.72rem,8.2vw,2.25rem);line-height:1.12}.category-hero p{font-size:.94rem}}

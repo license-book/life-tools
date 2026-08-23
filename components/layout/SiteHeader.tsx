@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import ToolSearch from "@/components/search/ToolSearch";
 import styles from "./SiteHeader.module.css";
 
 const nav = [
@@ -37,8 +38,9 @@ export default function SiteHeader() {
     <div className="container header-inner">
       <Link className={`logo ${styles.brandLogo}`} href="/" onClick={()=>setMenuOpen(false)}><CalculatorLogoIcon/><span>생활도구</span></Link>
       <nav className="nav" aria-label="주요 카테고리">{nav.map((item)=><div className={styles.desktopNavItem} key={item.label}><Link className={styles.desktopNavLink} href={item.href}>{item.label}<span className={styles.chevron} aria-hidden="true">⌄</span></Link><div className={styles.submenu}><div className={styles.submenuHeading}><strong>{item.label}</strong><span>{item.description}</span></div><div className={styles.submenuLinks}>{item.tools.map(([toolLabel,toolHref])=><Link key={toolHref} href={toolHref}>{toolLabel}</Link>)}</div><Link className={styles.viewAll} href={item.href}>{item.label} 전체 도구 보기 →</Link></div></div>)}</nav>
+      <ToolSearch overlay={overlay}/>
       <button className={`${styles.menuButton}${menuOpen?` ${styles.open}`:""}`} type="button" aria-label={menuOpen?"메뉴 닫기":"메뉴 열기"} aria-expanded={menuOpen} aria-controls="mobile-category-menu" onClick={()=>setMenuOpen(open=>!open)}><span/><span/><span/></button>
     </div>
-    <nav id="mobile-category-menu" className={`${styles.mobileNav}${menuOpen?` ${styles.open}`:""}`} aria-label="모바일 주요 카테고리"><div className={`container ${styles.mobileNavInner}`}>{nav.map((item)=><Link key={item.label} href={item.href} onClick={()=>setMenuOpen(false)}><strong>{item.label}</strong><span>{item.description}</span></Link>)}</div></nav>
+    <nav id="mobile-category-menu" className={`${styles.mobileNav}${menuOpen?` ${styles.open}`:""}`} aria-label="모바일 주요 카테고리"><div className={`container ${styles.mobileNavInner}`}><div className={styles.mobileSearch}><ToolSearch compact onNavigate={()=>setMenuOpen(false)}/></div>{nav.map((item)=><Link key={item.label} href={item.href} onClick={()=>setMenuOpen(false)}><strong>{item.label}</strong><span>{item.description}</span></Link>)}</div></nav>
   </header>;
 }

@@ -1,0 +1,1 @@
+Force Vercel production deployment after hero updates - 2026-08-23

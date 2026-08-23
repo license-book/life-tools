@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./SiteHeader.module.css";
 
 const nav = [
@@ -18,8 +19,21 @@ function CalculatorLogoIcon(){
 }
 
 export default function SiteHeader() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
-  return <header className="header">
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const overlay = isHome && !scrolled && !menuOpen;
+
+  return <header className={`header ${isHome ? styles.homeHeader : ""} ${overlay ? styles.overlayHeader : styles.solidHeader}`}>
     <div className="container header-inner">
       <Link className={`logo ${styles.brandLogo}`} href="/" onClick={()=>setMenuOpen(false)}><CalculatorLogoIcon/><span>생활도구</span></Link>
       <nav className="nav" aria-label="주요 카테고리">{nav.map((item)=><div className={styles.desktopNavItem} key={item.label}><Link className={styles.desktopNavLink} href={item.href}>{item.label}<span className={styles.chevron} aria-hidden="true">⌄</span></Link><div className={styles.submenu}><div className={styles.submenuHeading}><strong>{item.label}</strong><span>{item.description}</span></div><div className={styles.submenuLinks}>{item.tools.map(([toolLabel,toolHref])=><Link key={toolHref} href={toolHref}>{toolLabel}</Link>)}</div><Link className={styles.viewAll} href={item.href}>{item.label} 전체 도구 보기 →</Link></div></div>)}</nav>

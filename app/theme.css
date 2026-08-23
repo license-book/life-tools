@@ -1,0 +1,8 @@
+:root{--bg:#f7f9fc;--surface:#ffffff;--text:#111827;--muted:#6b7280;--line:#e5eaf1;--brand:#315efb;--brand-hover:#244fe0;--brand-soft:#eef3ff;--accent:#10b981;--success:#0f9f78;--shadow-sm:0 3px 14px rgba(15,23,42,.045);--shadow-md:0 18px 44px rgba(15,23,42,.08);--radius:18px}
+body{background:var(--bg);color:var(--text)}
+.header{background:rgba(255,255,255,.9);border-bottom:1px solid #e9edf3;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.header-inner{min-height:70px}
+.logo{color:#111827;font-size:1.22rem;font-weight:900;letter-spacing:-.045em}
+.nav{color:#4b5563;font-weight:700}
+.nav a:hover{color:var(--brand);background:#f3f6ff}
+.footer{background:#fff;border-top:1px solid #e9edf3;color:#7a8699}

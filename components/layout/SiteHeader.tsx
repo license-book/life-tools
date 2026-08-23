@@ -19,7 +19,7 @@ const nav = [
 const overlayPaths = new Set(["/", "/money", "/home", "/car", "/buy", "/work", "/life"]);
 
 function CalculatorLogoIcon(){
-  return <span className={styles.logoIcon} aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="5" y="3" width="22" height="26" rx="5"/><path d="M10 7.5h12v5H10z"/><path d="M12.5 17v5M10 19.5h5M18 19.5h5M10.5 25h4M18.5 23.5l4 3M22.5 23.5l-4 3"/></svg></span>;
+  return <span className={styles.logoIcon} aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M10 10h5M12.5 7.5v5M19 10h5M10 22h5M19 19l5 5M24 19l-5 5"/><circle cx="22" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="22" cy="26" r="1.2" fill="currentColor" stroke="none"/></svg></span>;
 }
 
 export default function SiteHeader() {

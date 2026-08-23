@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { tools } from "@/data/tools";
 import styles from "./ToolSearch.module.css";
 
@@ -23,6 +24,7 @@ function SearchIcon(){
 }
 
 export default function ToolSearch({ compact = false, hero = false, onNavigate, overlay = false }: Props) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
 
@@ -58,6 +60,12 @@ export default function ToolSearch({ compact = false, hero = false, onNavigate, 
     setFocused(true);
   };
 
+  const navigateToTool = (slug:string) => {
+    setFocused(false);
+    onNavigate?.();
+    router.push(`/tools/${slug}`);
+  };
+
   const open = focused;
   return (
     <div className={`${styles.searchWrap} ${compact ? styles.compact : ""} ${hero ? styles.hero : ""} ${overlay ? styles.overlay : ""}`}>
@@ -67,7 +75,7 @@ export default function ToolSearch({ compact = false, hero = false, onNavigate, 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
-          onBlur={() => window.setTimeout(() => setFocused(false), 140)}
+          onBlur={() => window.setTimeout(() => setFocused(false), 180)}
           placeholder={hero ? "필요한 생활도구를 검색해보세요. 예: 퇴직금, 평수, 주유비" : "생활도구 검색"}
           aria-label="전체 생활도구 검색"
           autoComplete="off"
@@ -77,7 +85,7 @@ export default function ToolSearch({ compact = false, hero = false, onNavigate, 
       </div>
 
       {open && query.trim() && <div className={styles.dropdown}>
-        {results.length ? <div className={styles.results}>{results.map((tool)=><Link key={tool.slug} href={`/tools/${tool.slug}`} onClick={onNavigate}><span className={styles.resultText}><strong>{tool.name}</strong><small>{tool.category} · {tool.shortDescription}</small></span><span className={styles.detailLink}>바로 사용 →</span></Link>)}</div> : <div className={styles.empty}><strong>일치하는 생활도구가 없습니다.</strong><span>다른 검색어를 입력해보세요.</span></div>}
+        {results.length ? <div className={styles.results}>{results.map((tool)=><Link key={tool.slug} href={`/tools/${tool.slug}`} onMouseDown={(e)=>e.preventDefault()} onClick={(e)=>{e.preventDefault();navigateToTool(tool.slug);}}><span className={styles.resultText}><strong>{tool.name}</strong><small>{tool.category} · {tool.shortDescription}</small></span><span className={styles.detailLink}>바로 사용 →</span></Link>)}</div> : <div className={styles.empty}><strong>일치하는 생활도구가 없습니다.</strong><span>다른 검색어를 입력해보세요.</span></div>}
       </div>}
 
       {open && !hero && !query.trim() && <div className={styles.dropdown}>

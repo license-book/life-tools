@@ -1,6 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "@/components/layout/SiteHeader";
-import { getToolsByCategory } from "@/data/tools";
-export const metadata:Metadata={title:"WORK 생활도구 | 근무시간·연차·수당·업무일 계산기",description:"근무시간, 주간 근로시간, 연장근로수당, 주휴수당, 연차 잔여일, 근속기간, 영업일, 프리랜서 단가, 회의비용 도구를 모았습니다.",alternates:{canonical:"/work"}};
-export default function WorkPage(){const tools=getToolsByCategory("WORK");return <><SiteHeader/><main><section className="hero"><div className="container"><span className="eyebrow">WORK · 직장과 업무</span><h1>근무시간부터 일정과 비용까지 한 번에 계산하세요</h1><p>근무시간·주간시간·수당 참고액·연차·근속기간·영업일·프리랜서 단가·회의비용까지 직장과 업무에서 자주 필요한 계산을 모았습니다.</p><div className="trust-row"><span className="trust-chip">✓ 무료</span><span className="trust-chip">✓ 회원가입 없음</span><span className="trust-chip">✓ 즉시 계산</span><span className="trust-chip">✓ 결과 저장·인쇄</span></div></div></section><section className="section"><div className="container"><h2>WORK 도구 {tools.length}개</h2><p className="section-intro">법·노무 관련 결과는 참고용으로 제공하고, 실제 적용조건은 최신 공식 기준과 근로계약을 확인하도록 안내합니다.</p><div className="grid">{tools.map(tool=><Link className="card" href={`/tools/${tool.slug}`} key={tool.slug}><span className="category-label">WORK</span><h3>{tool.name}</h3><p>{tool.shortDescription}</p></Link>)}</div></div></section><section className="section"><div className="container"><h2>상황별 추천</h2><div className="grid"><article className="card"><span className="category-label">근무 기록</span><h3>시간부터 정리</h3><p>근무시간과 주간 근로시간을 먼저 계산하고 필요하면 연장근로·주휴수당 참고 도구로 이어서 확인하세요.</p></article><article className="card"><span className="category-label">일정 관리</span><h3>연차·근속·영업일</h3><p>남은 연차와 근속기간, 두 날짜 사이 영업일 수와 N영업일 뒤 마감일을 함께 확인할 수 있습니다.</p></article><article className="card"><span className="category-label">업무 비용</span><h3>단가와 회의비용</h3><p>프리랜서 시간당 단가와 회의 인건비를 계산해 견적과 업무 효율 검토에 활용하세요.</p></article></div></div></section></main><footer className="footer"><div className="container">WORK · 직장과 업무를 위한 무료 계산·관리 도구</div></footer></>}
+import { getToolBySlug, getToolsByCategory } from "@/data/tools";
+
+export const metadata:Metadata={title:"WORK 생활도구 | 월급·퇴직금·연봉·수당·연차 계산기",description:"급여 실수령액, 퇴직금, 연봉·시급 환산, 2026 최저임금, 연장근로수당, 주휴수당, 연차수당, 근무시간과 업무일 계산 도구를 모았습니다.",alternates:{canonical:"/work"}};
+
+const employeeCoreSlugs=["salary-net-calculator","severance-pay","annual-salary","wage-converter","minimum-wage-monthly","salary-raise","overtime-pay","weekly-holiday-pay","annual-leave-pay","annual-leave-balance","tenure-duration"];
+
+export default function WorkPage(){
+ const workTools=getToolsByCategory("WORK");
+ const employeeCore=employeeCoreSlugs.map(getToolBySlug).filter(Boolean);
+ const secondary=workTools.filter(tool=>!employeeCoreSlugs.includes(tool.slug));
+ return <><SiteHeader/><main>
+  <section className="hero"><div className="container"><span className="eyebrow">WORK · 직장인과 근로자</span><h1>월급부터 퇴직금·수당·연차까지 바로 계산하세요</h1><p>급여 실수령액, 퇴직금, 연봉·시급 환산, 최저임금, 각종 수당과 연차·근속기간을 먼저 확인하고 업무시간·일정 계산까지 이어서 사용할 수 있습니다.</p><div className="trust-row"><span className="trust-chip">✓ 무료</span><span className="trust-chip">✓ 회원가입 없음</span><span className="trust-chip">✓ 직장인 핵심 계산</span><span className="trust-chip">✓ 결과 저장·인쇄</span></div></div></section>
+
+  <section className="section"><div className="container"><h2>직장인이 많이 찾는 핵심 계산기</h2><p className="section-intro">월급·퇴직·연봉·최저임금처럼 실제 근로자가 자주 확인하는 계산기를 가장 먼저 배치했습니다.</p><div className="grid">{employeeCore.map(tool=>tool?<Link className="card" href={`/tools/${tool.slug}`} key={tool.slug}><span className="category-label">핵심</span><h3>{tool.name}</h3><p>{tool.shortDescription}</p></Link>:null)}</div></div></section>
+
+  <section className="section"><div className="container"><h2>근무시간·업무 일정 도구</h2><p className="section-intro">급여 계산 다음으로 필요한 근무시간, 영업일, 프리랜서 단가와 회의비용 도구입니다.</p><div className="grid">{secondary.map(tool=><Link className="card" href={`/tools/${tool.slug}`} key={tool.slug}><span className="category-label">WORK</span><h3>{tool.name}</h3><p>{tool.shortDescription}</p></Link>)}</div></div></section>
+
+  <section className="section"><div className="container"><h2>어떤 순서로 쓰면 좋을까요?</h2><div className="grid"><article className="card"><span className="category-label">급여</span><h3>월급·연봉부터 확인</h3><p>실수령액, 연봉 환산, 시급·월급 변환, 급여 인상률을 먼저 확인하세요.</p></article><article className="card"><span className="category-label">퇴직·수당</span><h3>퇴직금과 각종 수당</h3><p>퇴직금, 연장근로수당, 주휴수당, 연차수당은 실제 근로조건과 함께 참고 계산하세요.</p></article><article className="card"><span className="category-label">근무 관리</span><h3>연차·근속·업무일</h3><p>남은 연차, 근속기간, 근무시간과 영업일을 이어서 관리할 수 있습니다.</p></article></div></div></section>
+ </main><footer className="footer"><div className="container">WORK · 직장인과 근로자를 위한 무료 급여·수당·근무 계산 도구</div></footer></>}

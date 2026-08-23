@@ -5,9 +5,9 @@ import ToolSearch from "@/components/search/ToolSearch";
 import styles from "@/app/page.module.css";
 
 const slides = [
-  { tone:"finance", icons:["calc","percent","wallet"] },
-  { tone:"living", icons:["home","car","bag"] },
-  { tone:"daily", icons:["calendar","clock","check"] },
+  { tone:"Finance", icons:["calc","percent","wallet"] },
+  { tone:"Living", icons:["home","car","bag"] },
+  { tone:"Daily", icons:["calendar","clock","check"] },
 ] as const;
 
 type IconName = typeof slides[number]["icons"][number];
@@ -41,8 +41,8 @@ export default function HeroSlider() {
     </div></div></div>
 
     <div className={styles.heroMedia} style={{position:"relative",zIndex:1}}><div className={styles.heroTrack} style={{transform:`translateX(-${active*100}%)`}}>
-      {slides.map((slide,index)=><div className={`${styles.heroSlide} ${styles[`heroTone${slide.tone[0].toUpperCase()}${slide.tone.slice(1)}`]}`} key={slide.tone}>
-        <div className={styles.heroGlow}/><div className={styles.heroIconCluster}>{slide.icons.map((icon,i)=><div className={`${styles.heroLineIcon} ${styles[`heroLineIcon${i+1}`]}`} key={icon}><LineIcon name={icon}/></div>)}</div><span className={styles.heroOrbOne}/><span className={styles.heroOrbTwo}/>
+      {slides.map((slide)=><div className={`${styles.heroSlide} heroTone${slide.tone}`} key={slide.tone}>
+        <div className="heroGlow"/><div className="heroIconCluster">{slide.icons.map((icon,i)=><div className={`heroLineIcon heroLineIcon${i+1}`} key={icon}><LineIcon name={icon}/></div>)}</div><span className="heroOrbOne"/><span className="heroOrbTwo"/>
       </div>)}
     </div>
     <button className={`${styles.sliderArrow} ${styles.sliderPrev}`} onClick={()=>move(-1)} aria-label="이전 배경">‹</button><button className={`${styles.sliderArrow} ${styles.sliderNext}`} onClick={()=>move(1)} aria-label="다음 배경">›</button>

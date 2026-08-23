@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ToolSearch from "@/components/search/ToolSearch";
 import styles from "@/app/page.module.css";
 
 const slides = [
@@ -35,6 +36,7 @@ export default function HeroSlider() {
             <span className={styles.kicker}>생활 계산을 더 간단하게</span>
             <h1 style={{ color: "#fff", textShadow: "0 2px 8px rgba(15,23,42,.28)" }}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
             <p className={styles.heroLead} style={{ color: "#fff", textShadow: "0 1px 5px rgba(15,23,42,.35)" }}>돈, 집, 자동차, 쇼핑, 직장, 일상까지. 자주 필요한 계산과 비교 도구를 회원가입 없이 바로 사용할 수 있습니다.</p>
+            <ToolSearch hero />
             <div className="trust-row" aria-label="생활도구 주요 특징">
               <span className="trust-chip" style={trustChipStyle}>✓ 무료</span>
               <span className="trust-chip" style={trustChipStyle}>✓ 회원가입 없음</span>

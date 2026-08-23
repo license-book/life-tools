@@ -7,6 +7,7 @@ import { areaPyeongTool, roomAreaTool, paintQuantityTool, wallpaperQuantityTool,
 import { fuelCostTool, fuelEfficiencyTool, tripFuelCostTool, carLoanTool, ownershipCostTool, depreciationTool, evChargingCostTool, parkingCostTool, maintenanceBudgetTool, carExpenseSplitTool } from "@/data/tools/car-basics";
 import { buyBasicsTools } from "@/data/tools/buy-basics";
 import { workBasicsTools } from "@/data/tools/work-basics";
+import { workEmployeeTools } from "@/data/tools/work-employee";
 import { lifeBasicsTools } from "@/data/tools/life-basics";
 
 export const tools: ToolDefinition[] = [
@@ -16,6 +17,7 @@ export const tools: ToolDefinition[] = [
   fuelCostTool, fuelEfficiencyTool, tripFuelCostTool, carLoanTool, ownershipCostTool, depreciationTool, evChargingCostTool, parkingCostTool, maintenanceBudgetTool, carExpenseSplitTool,
   ...buyBasicsTools,
   ...workBasicsTools,
+  ...workEmployeeTools,
   ...lifeBasicsTools,
 ];
 

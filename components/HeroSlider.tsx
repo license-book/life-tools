@@ -26,7 +26,7 @@ export default function HeroSlider() {
         <div className={`container ${styles.heroOverlayInner}`}>
           <div className={styles.heroCopy}>
             <span className={styles.kicker}>생활 계산을 더 간단하게</span>
-            <h1>필요한 계산을<br/><em>빠르고 정확하게.</em></h1>
+            <h1>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
             <p className={styles.heroLead}>돈, 집, 자동차, 쇼핑, 직장, 일상까지. 자주 필요한 계산과 비교 도구를 회원가입 없이 바로 사용할 수 있습니다.</p>
             <div className="trust-row" aria-label="생활도구 주요 특징">
               <span className="trust-chip">✓ 무료</span>

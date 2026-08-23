@@ -12,7 +12,7 @@ export default function WorkPage(){
  const employeeCore=employeeCoreSlugs.map(getToolBySlug).filter(Boolean);
  const secondary=workTools.filter(tool=>!employeeCoreSlugs.includes(tool.slug));
  return <><SiteHeader/><main>
-  <section className="hero"><div className="container"><span className="eyebrow">WORK · 직장인과 근로자</span><h1>월급·주급부터 퇴직금·수당·연차까지 바로 계산하세요</h1><p>급여 실수령액, 주급, 퇴직금, 연봉·시급 환산, 최저임금, 각종 수당과 연차·근속기간을 먼저 확인하고 업무시간·일정 계산까지 이어서 사용할 수 있습니다.</p><div className="trust-row"><span className="trust-chip">✓ 무료</span><span className="trust-chip">✓ 회원가입 없음</span><span className="trust-chip">✓ 직장인 핵심 계산</span><span className="trust-chip">✓ 결과 저장·인쇄</span></div></div></section>
+  <section className="hero category-hero"><div className="container"><span className="eyebrow">WORK · 직장인과 근로자</span><h1>월급·주급부터 퇴직금·수당·연차까지 바로 계산하세요</h1><p>급여 실수령액, 주급, 퇴직금, 연봉·시급 환산, 최저임금, 각종 수당과 연차·근속기간을 먼저 확인하고 업무시간·일정 계산까지 이어서 사용할 수 있습니다.</p><div className="trust-row"><span className="trust-chip">✓ 무료</span><span className="trust-chip">✓ 회원가입 없음</span><span className="trust-chip">✓ 직장인 핵심 계산</span><span className="trust-chip">✓ 결과 저장·인쇄</span></div></div></section>
 
   <section className="section"><div className="container"><h2>직장인이 많이 찾는 핵심 계산기</h2><p className="section-intro">월급·주급·퇴직·연봉·최저임금처럼 실제 근로자가 자주 확인하는 계산기를 가장 먼저 배치했습니다.</p><div className="grid">{employeeCore.map(tool=>tool?<Link className="card" href={`/tools/${tool.slug}`} key={tool.slug}><span className="category-label">핵심</span><h3>{tool.name}</h3><p>{tool.shortDescription}</p></Link>:null)}</div></div></section>
 

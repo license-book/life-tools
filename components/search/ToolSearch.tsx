@@ -7,6 +7,7 @@ import styles from "./ToolSearch.module.css";
 
 type Props = {
   compact?: boolean;
+  hero?: boolean;
   onNavigate?: () => void;
   overlay?: boolean;
 };
@@ -17,7 +18,7 @@ function normalize(value: string) {
   return value.toLocaleLowerCase("ko-KR").replace(/\s+/g, "");
 }
 
-export default function ToolSearch({ compact = false, onNavigate, overlay = false }: Props) {
+export default function ToolSearch({ compact = false, hero = false, onNavigate, overlay = false }: Props) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
 
@@ -48,9 +49,14 @@ export default function ToolSearch({ compact = false, onNavigate, overlay = fals
       .map((item) => item.tool);
   }, [query]);
 
+  const choosePopular = (word:string) => {
+    setQuery(word);
+    setFocused(true);
+  };
+
   const open = focused;
   return (
-    <div className={`${styles.searchWrap} ${compact ? styles.compact : ""} ${overlay ? styles.overlay : ""}`}>
+    <div className={`${styles.searchWrap} ${compact ? styles.compact : ""} ${hero ? styles.hero : ""} ${overlay ? styles.overlay : ""}`}>
       <div className={styles.inputWrap}>
         <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
         <input
@@ -58,17 +64,20 @@ export default function ToolSearch({ compact = false, onNavigate, overlay = fals
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onBlur={() => window.setTimeout(() => setFocused(false), 140)}
-          placeholder="생활도구 검색"
+          placeholder={hero ? "필요한 생활도구를 검색해보세요" : "생활도구 검색"}
           aria-label="전체 생활도구 검색"
           autoComplete="off"
         />
-        {query && <button type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>setQuery("")} aria-label="검색어 지우기">×</button>}
+        {query && <button className={styles.clearButton} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>setQuery("")} aria-label="검색어 지우기">×</button>}
+        {hero && <button className={styles.searchButton} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>setFocused(true)}>검색</button>}
       </div>
+
+      {hero && <div className={styles.heroPopular}><span>인기검색어</span>{popular.map((word)=><button key={word} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>choosePopular(word)}>{word}</button>)}</div>}
 
       {open && <div className={styles.dropdown}>
         {!query.trim() ? <>
           <div className={styles.dropdownTitle}>많이 찾는 도구</div>
-          <div className={styles.popular}>{popular.map((word)=><button key={word} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>setQuery(word)}>{word}</button>)}</div>
+          <div className={styles.popular}>{popular.map((word)=><button key={word} type="button" onMouseDown={(e)=>e.preventDefault()} onClick={()=>choosePopular(word)}>{word}</button>)}</div>
           <div className={styles.hint}>도구 이름이나 필요한 계산을 입력해보세요.</div>
         </> : results.length ? <>
           <div className={styles.dropdownTitle}>검색 결과</div>

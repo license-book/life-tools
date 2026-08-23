@@ -8,6 +8,7 @@ import { fuelCostTool, fuelEfficiencyTool, tripFuelCostTool, carLoanTool, owners
 import { buyBasicsTools } from "@/data/tools/buy-basics";
 import { workBasicsTools } from "@/data/tools/work-basics";
 import { lifeBasicsTools } from "@/data/tools/life-basics";
+import { lifeMoreTools } from "@/data/tools/life-more";
 
 export const tools: ToolDefinition[] = [
   loanCalculatorTool, vatCalculatorTool, depositInterestTool, savingsInterestTool, compoundInterestTool, discountTool, salaryNetTool,
@@ -17,6 +18,7 @@ export const tools: ToolDefinition[] = [
   ...buyBasicsTools,
   ...workBasicsTools,
   ...lifeBasicsTools,
+  ...lifeMoreTools,
 ];
 
 export function getToolBySlug(slug: string) { return tools.find((tool) => tool.slug === slug); }

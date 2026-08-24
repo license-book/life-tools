@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 function FooterLogoIcon(){
-  return <span className="site-footer-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M10 10h5M12.5 7.5v5M19 10h5M10 22h5M19 19l5 5M24 19l-5 5"/><circle cx="22" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="22" cy="26" r="1.2" fill="currentColor" stroke="none"/></svg></span>;
+  return <span className="site-footer-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 9.5h8M11 5.5v8M18 9.5h8M7 22.5h8M18 18.5l8 8M26 18.5l-8 8"/><circle cx="22" cy="15.5" r="1.7" fill="currentColor" stroke="none"/><circle cx="22" cy="29" r="1.7" fill="currentColor" stroke="none"/></svg></span>;
 }
 
 export default function SiteFooter(){

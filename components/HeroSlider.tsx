@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ToolSearch from "@/components/search/ToolSearch";
 import styles from "@/app/page.module.css";
 
@@ -29,11 +29,14 @@ const trustChipStyle = { color:"#fff", background:"transparent", borderColor:"rg
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
+  const touchStartX = useRef<number | null>(null);
   useEffect(() => { const timer = window.setInterval(() => setActive((v)=>(v+1)%slides.length), 5200); return () => window.clearInterval(timer); }, []);
   const move=(dir:number)=>setActive((v)=>(v+dir+slides.length)%slides.length);
+  const onTouchStart=(e:React.TouchEvent<HTMLDivElement>)=>{ touchStartX.current=e.touches[0]?.clientX ?? null; };
+  const onTouchEnd=(e:React.TouchEvent<HTMLDivElement>)=>{ const start=touchStartX.current; touchStartX.current=null; if(start===null) return; const end=e.changedTouches[0]?.clientX ?? start; const dx=end-start; if(Math.abs(dx)<45) return; move(dx<0?1:-1); };
 
-  return <div className={styles.heroSlider} style={{overflow:"visible",zIndex:1}}>
-    <div className={styles.heroOverlay} style={{zIndex:30,overflow:"visible"}}><div className={`container ${styles.heroOverlayInner}`} style={{overflow:"visible"}}><div className={styles.heroCopy} style={{position:"relative",zIndex:40,overflow:"visible"}}>
+  return <div className={styles.heroSlider} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <div className={styles.heroOverlay} style={{zIndex:30}}><div className={`container ${styles.heroOverlayInner}`} style={{overflow:"visible"}}><div className={styles.heroCopy} style={{position:"relative",zIndex:40,overflow:"visible"}}>
       <h1 style={{color:"#fff",marginTop:0}}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
       <p className={styles.heroLead} style={{color:"#fff",whiteSpace:"nowrap"}}>생활에 필요한 계산과 비교 도구를 회원가입 없이 바로 사용하세요.</p>
       <ToolSearch hero />

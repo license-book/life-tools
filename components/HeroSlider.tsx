@@ -26,6 +26,7 @@ function LineIcon({ name }: { name: IconName }) {
 }
 
 const trustChipStyle = { color:"#fff", background:"transparent", borderColor:"rgba(255,255,255,.58)" };
+const heroEmphasisStyle = { background:"linear-gradient(90deg,#60a5fa 0%,#2dd4bf 52%,#4ade80 100%)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent", color:"transparent", fontStyle:"normal" };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
@@ -37,7 +38,7 @@ export default function HeroSlider() {
 
   return <div className={styles.heroSlider} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
     <div className={styles.heroOverlay} style={{zIndex:30}}><div className={`container ${styles.heroOverlayInner}`} style={{overflow:"visible"}}><div className={styles.heroCopy} style={{position:"relative",zIndex:40,overflow:"visible"}}>
-      <h1 style={{color:"#fff",marginTop:0}}>필요한 계산을<br/><em>빠르고 정확하게</em></h1>
+      <h1 style={{color:"#fff",marginTop:0}}>필요한 계산을<br/><em style={heroEmphasisStyle}>빠르고 정확하게</em></h1>
       <p className={styles.heroLead} style={{color:"#fff",whiteSpace:"nowrap"}}>생활에 필요한 계산과 비교 도구를 회원가입 없이 바로 사용하세요.</p>
       <ToolSearch hero />
       <div className="trust-row" aria-label="생활도구 주요 특징"><span className="trust-chip" style={trustChipStyle}>✓ 무료</span><span className="trust-chip" style={trustChipStyle}>✓ 회원가입 없음</span><span className="trust-chip" style={trustChipStyle}>✓ 계산 기준 설명</span><span className="trust-chip" style={trustChipStyle}>✓ 결과 저장·인쇄</span></div>

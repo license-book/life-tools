@@ -2,7 +2,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 58px 0 42px;
+  padding: 92px 0 58px;
   background: linear-gradient(118deg, #4c1d95 0%, #5b21b6 24%, #4f46e5 58%, #2563eb 100%);
   border-bottom: 1px solid rgba(255,255,255,.14);
 }
@@ -38,6 +38,12 @@
 }
 
 .tool-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 18px;
+  padding: 7px 13px;
+  border-radius: 999px;
   color: #fff;
   background: rgba(255,255,255,.13);
   border: 1px solid rgba(255,255,255,.24);
@@ -104,7 +110,7 @@
 
 @media (max-width: 820px) {
   .tool-hero {
-    padding: 48px 0 36px;
+    padding: 80px 0 46px;
     background: linear-gradient(140deg, #4c1d95 0%, #5b21b6 30%, #4f46e5 63%, #2563eb 100%);
   }
   .tool-hero-icon { right:-24px; width:145px; height:145px; opacity:.38; }
@@ -112,7 +118,11 @@
 
 @media (max-width: 560px) {
   .tool-hero {
-    padding: 42px 0 31px;
+    padding: 72px 0 38px;
+  }
+  .tool-hero .eyebrow {
+    margin-bottom: 15px;
+    padding: 6px 11px;
   }
   .tool-hero-icon { right:-34px; top:52%; width:120px; height:120px; opacity:.23; }
 }

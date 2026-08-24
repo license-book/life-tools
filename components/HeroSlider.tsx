@@ -26,7 +26,7 @@ function LineIcon({ name }: { name: IconName }) {
 }
 
 const trustChipStyle = { color:"#fff", background:"transparent", borderColor:"rgba(255,255,255,.58)" };
-const heroEmphasisStyle = { background:"linear-gradient(90deg,#60a5fa 0%,#2dd4bf 52%,#4ade80 100%)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent", color:"transparent", fontStyle:"normal" };
+const heroEmphasisStyle = { background:"linear-gradient(90deg,#93c5fd 0%,#67e8f9 34%,#5eead4 64%,#86efac 100%)", WebkitBackgroundClip:"text", backgroundClip:"text", WebkitTextFillColor:"transparent", color:"transparent", fontStyle:"normal", filter:"brightness(1.08)" };
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);

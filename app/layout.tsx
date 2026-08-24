@@ -7,6 +7,7 @@ import "./category-landing.css";
 import "./hero-title-size.css";
 import "./main-hero-gradient.css";
 import SiteFooter from "@/components/layout/SiteFooter";
+import FloatingActions from "@/components/layout/FloatingActions";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko" className={notoSansKR.variable}>
-      <body>{children}<SiteFooter/></body>
+      <body>{children}<FloatingActions/><SiteFooter/></body>
     </html>
   );
 }

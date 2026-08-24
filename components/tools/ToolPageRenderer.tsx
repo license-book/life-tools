@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import SiteHeader from "@/components/layout/SiteHeader";
 import AdSlot from "@/components/ads/AdSlot";
 import ToolHeroIcon from "@/components/tools/ToolHeroIcon";
+import ToolResetButton from "@/components/tools/ToolResetButton";
 import type { ToolDefinition } from "@/types/tool";
 import { createFaqJsonLd, createToolJsonLd } from "@/lib/tools/engine";
 import { getToolBySlug } from "@/data/tools";
@@ -19,7 +20,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
     <main>
       <section className="tool-hero"><div className="container"><ToolHeroIcon tool={tool} /><span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span><h1>{tool.name}</h1><p>{tool.heroDescription}</p><div className="trust-row">{tool.badges.map((badge)=><span className="trust-chip" key={badge}>✓ {badge}</span>)}</div></div></section>
 
-      <section className="section"><div className="container"><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p>{calculator}</div></section>
+      <section className="section"><div className="container"><div className="section-heading-row"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print"><ToolResetButton /></div></div>{calculator}</div></section>
 
       <div className="container"><AdSlot placement="tool-after-calculator" className="ad-slot-wide" /></div>
 

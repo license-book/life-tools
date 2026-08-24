@@ -16,15 +16,13 @@ const nav = [
   { code:"LIFE", label:"일상·생활", href:"/life", description:"날짜·수면·여행", tools:[["날짜·기간 계산기","/tools/date-period"],["나이·만나이 계산기","/tools/age-calculator"],["수면시간 계산기","/tools/sleep-time"],["여행 준비물 체크리스트","/tools/travel-packing-checklist"]] },
 ] as const;
 
-const overlayPaths = new Set(["/", "/money", "/home", "/car", "/buy", "/work", "/life"]);
-
 function CalculatorLogoIcon(){
   return <span className={styles.logoIcon} aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M10 10h5M12.5 7.5v5M19 10h5M10 22h5M19 19l5 5M24 19l-5 5"/><circle cx="22" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="22" cy="26" r="1.2" fill="currentColor" stroke="none"/></svg></span>;
 }
 
 export default function SiteHeader() {
   const pathname = usePathname();
-  const supportsOverlay = overlayPaths.has(pathname);
+  const supportsOverlay = true;
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);

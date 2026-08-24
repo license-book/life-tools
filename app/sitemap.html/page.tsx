@@ -42,7 +42,7 @@ export default function SitemapPage() {
             return <section className="panel sitemap-category" key={category.key}>
               <div className="sitemap-heading"><h2>{category.name}</h2><Link href={category.href}>전체 보기 →</Link></div>
               <div className="sitemap-tool-list">
-                {categoryTools.map((tool) => <Link key={tool.slug} href={`/tools/${tool.slug}`}>{tool.title}</Link>)}
+                {categoryTools.map((tool) => <Link key={tool.slug} href={`/tools/${tool.slug}`}>{tool.name}</Link>)}
               </div>
             </section>;
           })}

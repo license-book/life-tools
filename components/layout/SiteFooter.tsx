@@ -1,10 +1,14 @@
 import Link from "next/link";
 
+function FooterLogoIcon(){
+  return <span className="site-footer-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M10 10h5M12.5 7.5v5M19 10h5M10 22h5M19 19l5 5M24 19l-5 5"/><circle cx="22" cy="16" r="1.2" fill="currentColor" stroke="none"/><circle cx="22" cy="26" r="1.2" fill="currentColor" stroke="none"/></svg></span>;
+}
+
 export default function SiteFooter(){
   return <footer className="site-footer">
     <div className="container site-footer-grid">
       <div className="site-footer-brand">
-        <Link href="/" className="site-footer-logo"><span className="site-footer-mark" aria-hidden="true"><b>+</b><b>−</b><b>×</b><b>÷</b></span><span>생활도구</span></Link>
+        <Link href="/" className="site-footer-logo"><FooterLogoIcon/><span>생활도구</span></Link>
         <p>돈, 집, 자동차, 쇼핑, 직장, 일상에 필요한 계산과 비교 도구를 회원가입 없이 바로 이용하세요.</p>
       </div>
       <div className="site-footer-column"><strong>생활도구</strong><Link href="/money">돈·금융</Link><Link href="/home">집·주거</Link><Link href="/car">자동차</Link><Link href="/buy">쇼핑</Link><Link href="/work">직장·업무</Link><Link href="/life">일상·생활</Link></div>

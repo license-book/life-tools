@@ -10,6 +10,15 @@ import { getToolBySlug } from "@/data/tools";
 
 type ToolPageRendererProps = { tool: ToolDefinition; calculator: ReactNode; };
 
+const heroTitleStyle = {
+  background:"linear-gradient(90deg,#93c5fd 0%,#67e8f9 34%,#5eead4 64%,#86efac 100%)",
+  WebkitBackgroundClip:"text",
+  backgroundClip:"text",
+  WebkitTextFillColor:"transparent",
+  color:"transparent",
+  filter:"brightness(1.08)",
+};
+
 export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererProps) {
   const jsonLd = createToolJsonLd(tool);
   const faqJsonLd = createFaqJsonLd(tool);
@@ -18,7 +27,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
   return <>
     <SiteHeader />
     <main>
-      <section className="tool-hero"><div className="container"><ToolHeroIcon tool={tool} /><span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span><h1>{tool.name}</h1><p>{tool.heroDescription}</p><div className="trust-row">{tool.badges.map((badge)=><span className="trust-chip" key={badge}>✓ {badge}</span>)}</div></div></section>
+      <section className="tool-hero"><div className="container"><ToolHeroIcon tool={tool} /><span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span><h1 style={heroTitleStyle}>{tool.name}</h1><p>{tool.heroDescription}</p><div className="trust-row">{tool.badges.map((badge)=><span className="trust-chip" key={badge}>✓ {badge}</span>)}</div></div></section>
 
       <section className="section"><div className="container"><div className="section-heading-row"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print"><ToolResetButton /></div></div>{calculator}</div></section>
 

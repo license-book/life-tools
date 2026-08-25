@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import styles from "./ResultHierarchyEnhancer.module.css";
 
 const numericStart = /^(.+?)\s+([-+]?\d[\d,]*(?:\.\d+)?(?:\s*[:→~\-]\s*[-+]?\d[\d,]*(?:\.\d+)?)?.*)$/;
 
 function enhanceResultMain(element: HTMLElement) {
-  if (element.querySelector(":scope > .result-main-label, :scope > .result-main-value")) return;
+  if (element.querySelector(`:scope > .${styles.label}, :scope > .${styles.value}`)) return;
 
   const text = (element.textContent || "").trim();
   const match = text.match(numericStart);
@@ -15,15 +16,15 @@ function enhanceResultMain(element: HTMLElement) {
   const value = match[2].trim();
   if (!label || !value || label.length < 2) return;
 
-  element.classList.add("result-main-split");
+  element.classList.add(styles.split);
   element.replaceChildren();
 
   const labelNode = document.createElement("span");
-  labelNode.className = "result-main-label";
+  labelNode.className = styles.label;
   labelNode.textContent = label;
 
   const valueNode = document.createElement("strong");
-  valueNode.className = "result-main-value";
+  valueNode.className = styles.value;
   valueNode.textContent = value;
 
   element.append(labelNode, valueNode);

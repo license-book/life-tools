@@ -1,7 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./FloatingActions.module.css";
+
+function ToolsIcon(){
+  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="6" height="6" rx="1.4"/><rect x="14" y="4" width="6" height="6" rx="1.4"/><rect x="4" y="14" width="6" height="6" rx="1.4"/><rect x="14" y="14" width="6" height="6" rx="1.4"/></svg>;
+}
 
 function ShareIcon() {
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.5-4.5M8.2 13.2l7.5 4.5"/></svg>;
@@ -80,6 +85,9 @@ export default function FloatingActions(){
   const shareFacebook=()=>{const {url}=getShareData();openPopup(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);};
 
   return <div ref={rootRef} className={styles.wrap} aria-label="페이지 빠른 기능">
+    <Link href="/tools" className={styles.toolsButton} aria-label="전체 계산기 보기" onClick={()=>setOpen(false)}>
+      <ToolsIcon/><span>전체 도구</span><span className={styles.tooltip}>전체 계산기 보기</span>
+    </Link>
     <div className={styles.shareWrap}>
       {open&&<div className={styles.sharePanel} role="dialog" aria-label="현재 페이지 공유하기">
         <div className={styles.panelHead}><p className={styles.panelTitle}>공유하기</p><button type="button" className={styles.closeButton} onClick={()=>setOpen(false)} aria-label="공유 메뉴 닫기"><CloseIcon/></button></div>

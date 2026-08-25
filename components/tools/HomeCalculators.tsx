@@ -1,8 +1,9 @@
 "use client";
 import { useState, type ReactNode } from "react";
+import ToolOutputActions from "@/components/tools/ToolOutputActions";
 const fmt=(n:number,d=2)=>Number.isFinite(n)?n.toLocaleString("ko-KR",{maximumFractionDigits:d}):"0";
 const won=(n:number)=>`${Math.round(n).toLocaleString("ko-KR")}원`;
-const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><div className="tool-layout"><section className="panel">{children}</section><section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section></div>;
+const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><div className="tool-layout"><section className="panel">{children}</section><section className="panel">{result}<ToolOutputActions /></section></div>;
 const Num=({label,value,set,step=1}:{label:string,value:number,set:(n:number)=>void,step?:number})=><div className="field"><label>{label}</label><input type="number" min="0" step={step} value={value} onChange={e=>set(Number(e.target.value))}/></div>;
 export function AreaPyeongCalculator(){const [sqm,setSqm]=useState(84);const [p,setP]=useState(84/3.305785);return <Layout result={<><span className="category-label">변환 결과</span><div className="result-main">{fmt(sqm/3.305785)}평</div><div className="stats"><div className="stat"><small>입력 ㎡</small><strong>{fmt(sqm)}㎡</strong></div><div className="stat"><small>평 입력 환산</small><strong>{fmt(p*3.305785)}㎡</strong></div></div></>}><><Num label="제곱미터(㎡)" value={sqm} set={setSqm} step={0.01}/><Num label="평" value={p} set={setP} step={0.01}/></></Layout>}
 export function RoomAreaCalculator(){const [w,setW]=useState(3.6),[l,setL]=useState(4.2);const a=w*l;return <Layout result={<><span className="category-label">방 면적</span><div className="result-main">{fmt(a)}㎡ · {fmt(a/3.305785)}평</div></>}><Num label="가로(m)" value={w} set={setW} step={0.01}/><Num label="세로(m)" value={l} set={setL} step={0.01}/></Layout>}

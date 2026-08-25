@@ -9,7 +9,7 @@ const baseButton = { minHeight:48, padding:"0 16px", borderRadius:14, border:"1p
 function PrintIcon(){return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={iconBase} aria-hidden="true"><path d="M7 8V3h10v5"/><path d="M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/><path d="M17 11h.01"/></svg>}
 function PdfIcon(){return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={iconBase} aria-hidden="true"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5"/><path d="M8 16v-5h1.8a1.7 1.7 0 1 1 0 3.4H8"/><path d="M13 16v-5h1.3c1.8 0 2.7.9 2.7 2.5S16.1 16 14.3 16z"/></svg>}
 
-export default function ToolOutputActions({targetSelector=".tool-layout",fileName="생활도구-계산결과"}:{targetSelector?:string;fileName?:string}){
+export default function ToolOutputActions({targetSelector=".tool-layout",fileName="생활도구-계산결과",embedded=false}:{targetSelector?:string;fileName?:string;embedded?:boolean}){
   const [saving,setSaving]=useState(false);
   const savePdf=async()=>{
     if(saving) return;
@@ -39,8 +39,9 @@ export default function ToolOutputActions({targetSelector=".tool-layout",fileNam
       pdf.save(`${fileName}.pdf`);
     } finally { setSaving(false); }
   };
-  return <div className="no-print" style={rowStyle} aria-label="계산 결과 저장 및 인쇄">
+  const buttons=<>
     <button type="button" onClick={()=>window.print()} style={{...baseButton,background:"linear-gradient(135deg,#315efb 0%,#2786f5 100%)",color:"#fff",borderColor:"rgba(49,94,251,.3)"}}><PrintIcon/>인쇄하기</button>
     <button type="button" onClick={savePdf} disabled={saving} style={{...baseButton,background:"linear-gradient(135deg,#0f9f6e 0%,#16a3a5 100%)",color:"#fff",borderColor:"rgba(15,159,110,.3)",opacity:saving ? .72 : 1}}><PdfIcon/>{saving?"PDF 생성 중...":"PDF 저장"}</button>
-  </div>;
+  </>;
+  return embedded ? buttons : <div className="no-print" style={rowStyle} aria-label="계산 결과 저장 및 인쇄">{buttons}</div>;
 }

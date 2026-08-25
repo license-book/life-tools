@@ -23,8 +23,7 @@ export default function ToolOutputActions({targetSelector=".tool-layout",fileNam
       const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
       const pageW=210,pageH=297,margin=10,usableW=pageW-margin*2;
       const imgH=canvas.height*usableW/canvas.width;
-      let y=margin;
-      if(imgH<=pageH-margin*2){pdf.addImage(img,"PNG",margin,y,usableW,imgH,"FAST");}
+      if(imgH<=pageH-margin*2){pdf.addImage(img,"PNG",margin,margin,usableW,imgH,"FAST");}
       else{
         const slicePx=Math.floor((pageH-margin*2)*canvas.width/usableW);
         let offset=0,page=0;
@@ -42,6 +41,6 @@ export default function ToolOutputActions({targetSelector=".tool-layout",fileNam
   };
   return <div className="no-print" style={rowStyle} aria-label="계산 결과 저장 및 인쇄">
     <button type="button" onClick={()=>window.print()} style={{...baseButton,background:"linear-gradient(135deg,#315efb 0%,#2786f5 100%)",color:"#fff",borderColor:"rgba(49,94,251,.3)"}}><PrintIcon/>인쇄하기</button>
-    <button type="button" onClick={savePdf} disabled={saving} style={{...baseButton,background:"linear-gradient(135deg,#0f9f6e 0%,#16a3a5 100%)",color:"#fff",borderColor:"rgba(15,159,110,.3)",opacity:saving?.72:1}}><PdfIcon/>{saving?"PDF 생성 중...":"PDF 저장"}</button>
+    <button type="button" onClick={savePdf} disabled={saving} style={{...baseButton,background:"linear-gradient(135deg,#0f9f6e 0%,#16a3a5 100%)",color:"#fff",borderColor:"rgba(15,159,110,.3)",opacity:saving ? .72 : 1}}><PdfIcon/>{saving?"PDF 생성 중...":"PDF 저장"}</button>
   </div>;
 }

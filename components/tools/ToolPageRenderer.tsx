@@ -5,6 +5,7 @@ import AdSlot from "@/components/ads/AdSlot";
 import ToolHeroIcon from "@/components/tools/ToolHeroIcon";
 import ToolResetButton from "@/components/tools/ToolResetButton";
 import ResultHierarchyEnhancer from "@/components/tools/ResultHierarchyEnhancer";
+import PersonalizedResultEngine from "@/components/tools/PersonalizedResultEngine";
 import type { ToolDefinition } from "@/types/tool";
 import { createFaqJsonLd, createToolJsonLd } from "@/lib/tools/engine";
 import { getToolBySlug } from "@/data/tools";
@@ -23,6 +24,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
   const jsonLd = createToolJsonLd(tool);
   const faqJsonLd = createFaqJsonLd(tool);
   const relatedTools = tool.relatedTools.map(getToolBySlug).filter((item): item is ToolDefinition => Boolean(item));
+  const resourceTitle = tool.freeResources?.[0]?.title;
 
   return <>
     <SiteHeader />
@@ -30,7 +32,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
     <main>
       <section className="tool-hero"><div className="container"><ToolHeroIcon tool={tool} /><span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span><h1 style={heroTitleStyle}>{tool.name}</h1><p>{tool.heroDescription}</p><div className="trust-row">{tool.badges.map((badge)=><span className="trust-chip" key={badge}>✓ {badge}</span>)}</div></div></section>
 
-      <section className="section"><div className="container"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print" style={{display:"flex",justifyContent:"flex-end",margin:"-8px 0 14px"}}><ToolResetButton /></div>{calculator}</div></section>
+      <section className="section"><div className="container"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print" style={{display:"flex",justifyContent:"flex-end",margin:"-8px 0 14px"}}><ToolResetButton /></div><div id="calculator-workspace">{calculator}</div><PersonalizedResultEngine toolName={tool.name} slug={tool.slug} resourceTitle={resourceTitle}/></div></section>
 
       <div className="container"><AdSlot placement="tool-after-calculator" className="ad-slot-wide" /></div>
 

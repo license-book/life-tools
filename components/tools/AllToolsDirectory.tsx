@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ToolDefinition } from "@/types/tool";
+import styles from "./AllToolsDirectory.module.css";
 
 const categories = [
   { code:"ALL", label:"전체" },
@@ -37,25 +38,25 @@ export default function AllToolsDirectory({ tools }: { tools: ToolDefinition[] }
   })).filter(group=>group.tools.length>0),[filtered]);
 
   return <>
-    <div className="all-tools-controls">
-      <label className="all-tools-search">
-        <span className="sr-only">도구 검색</span>
+    <div className={styles.controls}>
+      <label className={styles.search}>
+        <span className={styles.srOnly}>도구 검색</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
         <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="계산기·도구 이름 검색" />
       </label>
-      <div className="all-tools-filters" aria-label="카테고리 필터">
-        {categories.map(item=><button key={item.code} type="button" className={category===item.code?"is-active":""} onClick={()=>setCategory(item.code)}>{item.label}{item.code!=="ALL"?<span>{tools.filter(t=>t.category===item.code).length}</span>:<span>{tools.length}</span>}</button>)}
+      <div className={styles.filters} aria-label="카테고리 필터">
+        {categories.map(item=><button key={item.code} type="button" className={category===item.code?styles.active:undefined} onClick={()=>setCategory(item.code)}>{item.label}<span>{item.code==="ALL"?tools.length:tools.filter(t=>t.category===item.code).length}</span></button>)}
       </div>
     </div>
 
-    <div className="all-tools-summary"><strong>{filtered.length}</strong>개의 도구가 표시되고 있습니다.</div>
+    <div className={styles.summary}><strong>{filtered.length}</strong>개의 도구가 표시되고 있습니다.</div>
 
-    {grouped.length ? <div className="all-tools-groups">{grouped.map(group=><section className="all-tools-group" key={group.code} id={group.code.toLowerCase()}>
-      <div className="all-tools-group-heading"><div><span className="category-label">{group.code}</span><h2>{group.label}</h2></div><strong>{group.tools.length}개</strong></div>
-      <div className="all-tools-grid">{group.tools.map(tool=><Link className="all-tool-card" href={`/tools/${tool.slug}`} key={tool.slug}>
-        <div className="all-tool-card-top"><span>{categoryLabel[tool.category]}</span><span aria-hidden="true">→</span></div>
+    {grouped.length ? <div className={styles.groups}>{grouped.map(group=><section className={styles.group} key={group.code} id={group.code.toLowerCase()}>
+      <div className={styles.heading}><div><span className="category-label">{group.code}</span><h2>{group.label}</h2></div><strong>{group.tools.length}개</strong></div>
+      <div className={styles.grid}>{group.tools.map(tool=><Link className={styles.card} href={`/tools/${tool.slug}`} key={tool.slug}>
+        <div className={styles.cardTop}><span>{categoryLabel[tool.category]}</span><span aria-hidden="true">→</span></div>
         <h3>{tool.name}</h3><p>{tool.shortDescription}</p>
       </Link>)}</div>
-    </section>)}</div> : <div className="all-tools-empty">검색 조건에 맞는 도구가 없습니다.</div>}
+    </section>)}</div> : <div className={styles.empty}>검색 조건에 맞는 도구가 없습니다.</div>}
   </>;
 }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { calculateLoan, type RepaymentMethod } from "@/lib/calculator/loan";
+import ToolOutputActions from "@/components/tools/ToolOutputActions";
 
 const won = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 });
 
@@ -50,8 +51,6 @@ export default function LoanCalculator() {
     URL.revokeObjectURL(url);
   };
 
-  const printPlan = () => window.print();
-
   return (
     <div className="tool-layout">
       <section className="panel no-print" aria-labelledby="loan-input-title">
@@ -89,11 +88,11 @@ export default function LoanCalculator() {
           <div className="stat"><small>대출기간</small><strong>{months}개월</strong></div>
           <div className="stat"><small>상환방식</small><strong>{methodLabel[method]}</strong></div>
         </div>
-        <div className="action-row no-print">
+        <div className="action-row no-print" style={{gridTemplateColumns:"repeat(3,minmax(0,1fr))"}}>
           <button className="primary" type="button" onClick={exportCsv}>CSV 상환계획표</button>
-          <button className="secondary" type="button" onClick={printPlan}>인쇄 · PDF 저장</button>
+          <ToolOutputActions embedded targetSelector=".tool-layout" fileName={`대출상환계산-${methodLabel[method]}`} />
         </div>
-        <p className="resource-note no-print">회원가입·이메일 입력 없이 무료입니다. ‘인쇄 · PDF 저장’을 누른 뒤 브라우저 인쇄창에서 PDF로 저장할 수 있습니다.</p>
+        <p className="resource-note no-print">회원가입·이메일 입력 없이 무료입니다. 인쇄는 프린터 출력용, PDF 저장은 현재 계산 결과를 PDF 파일로 바로 저장합니다.</p>
       </section>
 
       <section className="panel full-width comparison-panel">

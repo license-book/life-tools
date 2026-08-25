@@ -4,8 +4,12 @@ import ToolPageRenderer from "@/components/tools/ToolPageRenderer";
 import { AgeCalculator, AnniversaryCycleCalculator, DatePeriodCalculator, SleepTimeCalculator, TravelPackingChecklist } from "@/components/tools/LifeCalculators";
 import { AnnualMileageCalculator, DdayCalculator, EmergencyFundCalculator, EventBudgetCalculator, FreelanceRateCalculator, InstallmentTotalCalculator, RenovationBudgetCalculator, RentShareCalculator, SavingsGoalCalculator, TripTotalCostCalculator, UnitPriceCalculator, WeeklyPayCalculator } from "@/components/tools/ExpansionCalculators";
 import { BillableUtilizationCalculator, BreakDeductionCalculator, CagrCalculator, CashbackPriceCalculator, CurtainSizeCalculator, EvChargeTimeCalculator, PricePerUseCalculator, RatioSplitCalculator, RealReturnCalculator, StorageVolumeCalculator, TireDiameterCalculator, WeightedAverageCalculator } from "@/components/tools/AdditionalCalculators";
+import NextWaveCalculator from "@/components/tools/NextWaveCalculators";
 import { getToolBySlug } from "@/data/tools";
 import { createToolMetadata } from "@/lib/tools/engine";
+
+const nextWaveSlugs=["loan-payment-compare","early-repayment-fee","inflation-future-value","break-even","wallpaper-cost","tile-installation-cost","heating-share","ice-vs-ev-cost","annual-car-total","toll-fuel-trip","n-plus-one-discount","point-effective-price","landed-cost","night-work-pay","holiday-work-pay","project-quote","trip-expense-split","group-dues","time-goal","time-zone-difference"] as const;
+const nextWave=Object.fromEntries(nextWaveSlugs.map((slug)=>[slug,<NextWaveCalculator key={slug} type={slug}/>]));
 
 const calculators = {
   "date-period": <DatePeriodCalculator />,
@@ -37,6 +41,7 @@ const calculators = {
   "billable-utilization": <BillableUtilizationCalculator />,
   "ratio-split": <RatioSplitCalculator />,
   "weighted-average": <WeightedAverageCalculator />,
+  ...nextWave,
 } as const;
 
 type Props = { params: Promise<{ slug: string }> };

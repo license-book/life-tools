@@ -28,7 +28,7 @@ export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererP
     <main>
       <section className="tool-hero"><div className="container"><ToolHeroIcon tool={tool} /><span className="eyebrow">{tool.category} · 무료 · 회원가입 없음</span><h1 style={heroTitleStyle}>{tool.name}</h1><p>{tool.heroDescription}</p><div className="trust-row">{tool.badges.map((badge)=><span className="trust-chip" key={badge}>✓ {badge}</span>)}</div></div></section>
 
-      <section className="section"><div className="container"><div className="section-heading-row"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print"><ToolResetButton /></div></div>{calculator}</div></section>
+      <section className="section"><div className="container"><div><h2>{tool.calculatorTitle}</h2><p className="section-intro">{tool.calculatorDescription}</p></div><div className="no-print" style={{display:"flex",justifyContent:"flex-end",margin:"-8px 0 14px"}}><ToolResetButton /></div>{calculator}</div></section>
 
       <div className="container"><AdSlot placement="tool-after-calculator" className="ad-slot-wide" /></div>
 

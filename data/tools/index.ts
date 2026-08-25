@@ -10,6 +10,7 @@ import { workBasicsTools } from "@/data/tools/work-basics";
 import { workEmployeeTools } from "@/data/tools/work-employee";
 import { lifeBasicsTools } from "@/data/tools/life-basics";
 import { expansionTools } from "@/data/tools/expansion-2026-08";
+import { additionalTools } from "@/data/tools/additional-2026-08-25";
 
 export const tools: ToolDefinition[] = [
   loanCalculatorTool, vatCalculatorTool, depositInterestTool, savingsInterestTool, compoundInterestTool, discountTool, salaryNetTool,
@@ -21,6 +22,7 @@ export const tools: ToolDefinition[] = [
   ...workEmployeeTools,
   ...lifeBasicsTools,
   ...expansionTools,
+  ...additionalTools,
 ];
 
 export function getToolBySlug(slug: string) { return tools.find((tool) => tool.slug === slug); }

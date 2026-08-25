@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
 import AllToolsDirectory from "@/components/tools/AllToolsDirectory";
 import { tools } from "@/data/tools";
 
@@ -16,6 +15,5 @@ export default function ToolsPage(){
       <section className="category-hero all-tools-hero"><div className="container"><span className="eyebrow">ALL TOOLS · {tools.length}개</span><h1>전체 계산기·도구</h1><p>생활도구의 모든 계산기와 도구를 카테고리별로 한눈에 보고, 필요한 도구를 바로 검색할 수 있습니다.</p></div></section>
       <section className="section"><div className="container"><AllToolsDirectory tools={tools}/></div></section>
     </main>
-    <SiteFooter />
   </>;
 }

@@ -1,0 +1,28 @@
+.split{
+  display:grid;
+  gap:7px;
+  margin:10px 0 20px;
+  line-height:1.08;
+}
+.label{
+  display:block;
+  color:#315efb;
+  font-size:.94rem;
+  font-weight:850;
+  letter-spacing:-.02em;
+  line-height:1.35;
+}
+.value{
+  display:block;
+  color:#1f2a44;
+  font-size:clamp(2.35rem,5vw,3.55rem);
+  font-weight:950;
+  letter-spacing:-.055em;
+  line-height:1.05;
+  overflow-wrap:anywhere;
+}
+@media(max-width:560px){
+  .split{gap:6px;margin:8px 0 17px}
+  .label{font-size:.88rem}
+  .value{font-size:clamp(2.05rem,10vw,2.7rem)}
+}

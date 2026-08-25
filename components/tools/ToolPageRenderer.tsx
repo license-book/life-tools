@@ -11,12 +11,11 @@ import { getToolBySlug } from "@/data/tools";
 type ToolPageRendererProps = { tool: ToolDefinition; calculator: ReactNode; };
 
 const heroTitleStyle = {
-  background:"linear-gradient(90deg,#93c5fd 0%,#67e8f9 34%,#5eead4 64%,#86efac 100%)",
+  background:"linear-gradient(90deg,#3B82F6 0%,#06D6D6 52%,#22E58B 100%)",
   WebkitBackgroundClip:"text",
   backgroundClip:"text",
   WebkitTextFillColor:"transparent",
   color:"transparent",
-  filter:"brightness(1.08)",
 };
 
 export default function ToolPageRenderer({ tool, calculator }: ToolPageRendererProps) {

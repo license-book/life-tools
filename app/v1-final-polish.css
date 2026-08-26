@@ -1,0 +1,41 @@
+/* V1 final shared polish: result hierarchy, mobile overflow, touch targets, charts and output actions */
+#calculator-workspace,.tool-layout,.panel,.card,.chart-card{min-width:0;max-width:100%}
+.result-main,.result-main-value,.stat strong,.compare-values dd,.metric-label strong{font-variant-numeric:tabular-nums}
+.result-main-value,.stat strong,.compare-values dd{overflow-wrap:anywhere;word-break:normal}
+.result-main-label{display:block;margin-bottom:5px;color:var(--brand);font-size:.95rem;font-weight:850;letter-spacing:-.02em}
+.result-main-value{display:block;color:#172033;font-size:inherit;font-weight:900;line-height:1.12}
+.action-row button,.primary,.secondary{min-height:48px;padding-left:14px;padding-right:14px}
+.field input,.field select{min-height:48px}
+.chart-card{overflow:hidden}
+.chart-card strong{font-variant-numeric:tabular-nums}
+
+@media(max-width:560px){
+  #calculator-workspace{width:100%;overflow:hidden}
+  .panel,.card,.chart-card{width:100%;max-width:100%}
+  .result-main{font-size:clamp(1.85rem,8.8vw,2.2rem);line-height:1.12;letter-spacing:-.045em}
+  .result-main-label{font-size:.85rem;margin-bottom:7px}
+  .result-main-value{max-width:100%}
+  .stat{min-width:0;padding:13px}
+  .stat small{font-size:.78rem;line-height:1.35}
+  .stat strong{font-size:.98rem;line-height:1.35}
+  .action-row{gap:9px}
+  .action-row button,.primary,.secondary{width:100%;min-height:50px}
+  .field label{line-height:1.4}
+  .field input,.field select{font-size:16px}
+  .table-wrap{margin-left:0;margin-right:0}
+  .comparison-saving{border-radius:14px}
+  .chart-card{padding:18px!important}
+}
+
+@media(max-width:390px){
+  .container{width:min(100% - 22px,1160px)}
+  .panel,.card{padding:17px}
+  .result-main{font-size:1.85rem}
+  .stat strong{font-size:.93rem}
+}
+
+@media print{
+  .no-print,.floating-actions,.action-row{display:none!important}
+  body{background:#fff!important}
+  .panel,.card,.chart-card{box-shadow:none!important;break-inside:avoid}
+}

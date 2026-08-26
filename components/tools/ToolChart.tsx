@@ -16,15 +16,15 @@ const fmtDefault=(v:number)=>nf.format(Math.round(v));
 function Donut({data,centerLabel,valueFormatter=fmtDefault}:{data:ChartDatum[];centerLabel?:string;valueFormatter?:(v:number)=>string}){
   const total=data.reduce((s,d)=>s+Math.max(0,d.value),0)||1;
   let offset=0;
-  return <div style={{display:"grid",gridTemplateColumns:"minmax(160px,220px) 1fr",gap:22,alignItems:"center"}}>
-    <div style={{position:"relative",width:"100%",aspectRatio:"1/1",maxWidth:220,margin:"0 auto"}}>
+  return <div className="tool-chart-donut">
+    <div className="tool-chart-donut-graphic">
       <svg viewBox="0 0 120 120" style={{width:"100%",height:"100%",transform:"rotate(-90deg)"}} aria-hidden="true">
         <circle cx="60" cy="60" r="42" fill="none" stroke="#eef2f7" strokeWidth="18"/>
         {data.map((d,i)=>{const ratio=Math.max(0,d.value)/total;const dash=ratio*263.89;const el=<circle key={d.label} cx="60" cy="60" r="42" fill="none" stroke={colors[i%colors.length]} strokeWidth="18" strokeDasharray={`${dash} ${263.89-dash}`} strokeDashoffset={-offset} strokeLinecap="butt"/>;offset+=dash;return el;})}
       </svg>
-      <div style={{position:"absolute",inset:0,display:"grid",placeItems:"center",textAlign:"center",pointerEvents:"none"}}><div><strong style={{display:"block",fontSize:"1.25rem",color:"#172033"}}>{centerLabel??valueFormatter(total)}</strong><span style={{fontSize:".78rem",color:"#667085"}}>합계</span></div></div>
+      <div className="tool-chart-donut-center"><div><strong>{centerLabel??valueFormatter(total)}</strong><span>합계</span></div></div>
     </div>
-    <div style={{display:"grid",gap:10}}>{data.map((d,i)=><div key={d.label} style={{display:"grid",gridTemplateColumns:"12px 1fr auto",gap:9,alignItems:"center"}}><span style={{width:10,height:10,borderRadius:999,background:colors[i%colors.length]}}/><span style={{fontSize:".86rem",color:"#5f6b7c"}}>{d.label}</span><strong style={{fontSize:".88rem"}}>{valueFormatter(d.value)}</strong></div>)}</div>
+    <div className="tool-chart-legend">{data.map((d,i)=><div key={d.label} className="tool-chart-legend-row"><span className="tool-chart-dot" style={{background:colors[i%colors.length]}}/><span className="tool-chart-label">{d.label}</span><strong className="tool-chart-value">{valueFormatter(d.value)}</strong></div>)}</div>
   </div>;
 }
 
@@ -41,5 +41,26 @@ function Line({data,valueFormatter=fmtDefault}:{data:LineDatum[];valueFormatter?
 }
 
 export default function ToolChart(props:Props){
-  return <section className="chart-card" style={{background:"#fff",border:"1px solid #e5eaf1",borderRadius:20,padding:22,boxShadow:"0 8px 24px rgba(24,39,75,.06)"}}><div style={{marginBottom:18}}><span className="category-label">RESULT CHART</span><h3 style={{margin:"6px 0 4px",fontSize:"1.08rem"}}>{props.title}</h3>{props.description?<p style={{margin:0,color:"#667085",fontSize:".86rem"}}>{props.description}</p>:null}</div>{props.type==="donut"?<Donut data={props.data} centerLabel={props.centerLabel} valueFormatter={props.valueFormatter}/>:props.type==="bar"?<Bars data={props.data} valueFormatter={props.valueFormatter}/>:<Line data={props.data} valueFormatter={props.valueFormatter}/>}</section>;
+  return <section className="chart-card" style={{background:"#fff",border:"1px solid #e5eaf1",borderRadius:20,padding:22,boxShadow:"0 8px 24px rgba(24,39,75,.06)"}}><style jsx global>{`
+    .tool-chart-donut{display:grid;grid-template-columns:minmax(160px,220px) minmax(0,1fr);gap:22px;align-items:center}
+    .tool-chart-donut-graphic{position:relative;width:100%;aspect-ratio:1/1;max-width:220px;margin:0 auto}
+    .tool-chart-donut-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+    .tool-chart-donut-center strong{display:block;font-size:1.25rem;color:#172033;white-space:nowrap}
+    .tool-chart-donut-center span{font-size:.78rem;color:#667085}
+    .tool-chart-legend{display:grid;gap:12px;min-width:0}
+    .tool-chart-legend-row{display:grid;grid-template-columns:10px minmax(72px,1fr) auto;gap:9px;align-items:center;min-width:0}
+    .tool-chart-dot{width:10px;height:10px;border-radius:999px}
+    .tool-chart-label{font-size:.86rem;color:#5f6b7c;word-break:keep-all;white-space:nowrap}
+    .tool-chart-value{font-size:.88rem;white-space:nowrap;text-align:right;color:#172033}
+    @media(max-width:560px){
+      .chart-card{padding:18px!important}
+      .tool-chart-donut{grid-template-columns:1fr;gap:18px}
+      .tool-chart-donut-graphic{max-width:240px}
+      .tool-chart-donut-center strong{font-size:1.08rem}
+      .tool-chart-legend{width:100%;gap:10px}
+      .tool-chart-legend-row{grid-template-columns:10px minmax(88px,1fr) auto;padding:0 4px}
+      .tool-chart-label{font-size:.82rem}
+      .tool-chart-value{font-size:.84rem}
+    }
+  `}</style><div style={{marginBottom:18}}><span className="category-label">RESULT CHART</span><h3 style={{margin:"6px 0 4px",fontSize:"1.08rem"}}>{props.title}</h3>{props.description?<p style={{margin:0,color:"#667085",fontSize:".86rem"}}>{props.description}</p>:null}</div>{props.type==="donut"?<Donut data={props.data} centerLabel={props.centerLabel} valueFormatter={props.valueFormatter}/>:props.type==="bar"?<Bars data={props.data} valueFormatter={props.valueFormatter}/>:<Line data={props.data} valueFormatter={props.valueFormatter}/>}</section>;
 }

@@ -26,7 +26,7 @@ function collectPairs(root:HTMLElement){
 }
 function csvCell(value:string){return `"${value.replace(/"/g,'""')}"`;}
 
-function getTemplate(slug:string,category:ToolCategory,toolName:string,resourceTitle?:string):Template{
+function getTemplate(slug:string,category:ToolCategory,toolName:string):Template{
   const exact:Record<string,Partial<Template>>={
     "loan-calculator":{title:"나의 대출 상환계획표",inputTitle:"대출 조건",resultTitle:"상환 결과 요약",summaryTitle:"상환 계획 점검",summary:"월 상환액과 총이자, 상환기간을 한 번에 정리한 개인 대출 계획표입니다.",checks:["월 상환액이 월 소득 대비 과도하지 않은지 확인","중도상환수수료와 금리변동 조건 별도 확인","여유자금 발생 시 원금 조기상환 효과 비교"],fileLabel:"대출상환계획표"},
     "deposit-interest":{title:"예금 만기수령 계획표",inputTitle:"예치 조건",resultTitle:"만기 예상 결과",summaryTitle:"예금 계획 점검",summary:"예치금액과 금리, 기간을 기준으로 세전·세후 이자와 만기수령액을 정리합니다.",checks:["우대금리 적용 조건 확인","이자소득세 및 비과세 여부 확인","만기 자동연장 여부 확인"],fileLabel:"예금만기계획표"},
@@ -49,13 +49,13 @@ function getTemplate(slug:string,category:ToolCategory,toolName:string,resourceT
     WORK:{title:`${toolName} 업무 정산표`,inputTitle:"근무·업무 조건",resultTitle:"정산 결과",summaryTitle:"업무 정산 점검",summary:"근로시간·수당·견적 등 업무 관련 입력과 결과를 기록용으로 정리합니다.",checks:["적용 기준과 계약조건 확인","시간·단가 입력값 재확인","법정 기준이 있는 경우 최신 기준 확인"],fileLabel:"업무정산표"},
     LIFE:{title:`${toolName} 생활 계획표`,inputTitle:"생활 조건",resultTitle:"계산·정산 결과",summaryTitle:"생활 계획 점검",summary:"일상에서 바로 활용할 수 있도록 입력값과 결과를 한 장에 정리합니다.",checks:["공동사용 시 기준을 함께 확인","필요하면 메모를 추가해 보관","변경된 조건으로 다시 계산"],fileLabel:"생활계획표"}
   };
-  return {...categoryDefaults[category],...(exact[slug]||{}),title:resourceTitle||exact[slug]?.title||categoryDefaults[category].title} as Template;
+  return {...categoryDefaults[category],...(exact[slug]||{}),title:exact[slug]?.title||categoryDefaults[category].title} as Template;
 }
 
-export default function PersonalizedResultEngine({toolName,slug,category,resourceTitle}:Props){
+export default function PersonalizedResultEngine({toolName,slug,category}:Props){
   const [data,setData]=useState<{inputs:Pair[];results:Pair[];created:string}|null>(null);
   const [saving,setSaving]=useState(false);
-  const template=getTemplate(slug,category,toolName,resourceTitle);
+  const template=getTemplate(slug,category,toolName);
   const generate=()=>{const root=document.getElementById("calculator-workspace");if(!root)return;const collected=collectPairs(root);setData({...collected,created:new Date().toLocaleString("ko-KR")});};
   const saveCsv=()=>{if(!data)return;const rows=[["구분","항목","값"],...data.inputs.map(v=>[template.inputTitle,v.label,v.value]),...data.results.map(v=>[template.resultTitle,v.label,v.value]),[template.summaryTitle,"활용 메모",template.summary],...template.checks.map((v,i)=>[template.summaryTitle,`체크 ${i+1}`,v])];const text="\ufeff"+rows.map(row=>row.map(csvCell).join(",")).join("\n");const blob=new Blob([text],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`생활도구-${template.fileLabel}.csv`;a.click();URL.revokeObjectURL(url);};
   const savePdf=async()=>{if(!data)return;const target=document.getElementById("personalized-result-sheet");if(!target)return;setSaving(true);try{const [{default:html2canvas},{jsPDF}]=await Promise.all([import("html2canvas"),import("jspdf")]);const canvas=await html2canvas(target,{scale:2,backgroundColor:"#ffffff",useCORS:true});const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});const pageW=210,pageH=297,margin=12,usableW=pageW-margin*2;const imgH=canvas.height*usableW/canvas.width;const img=canvas.toDataURL("image/png",1);let y=margin,remaining=imgH;pdf.addImage(img,"PNG",margin,y,usableW,imgH);remaining-=pageH-margin*2;while(remaining>0){pdf.addPage();y=margin-(imgH-remaining);pdf.addImage(img,"PNG",margin,y,usableW,imgH);remaining-=pageH-margin*2;}pdf.save(`생활도구-${template.fileLabel}.pdf`);}finally{setSaving(false);}};

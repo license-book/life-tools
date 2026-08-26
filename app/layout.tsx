@@ -8,6 +8,7 @@ import "./hero-title-size.css";
 import "./main-hero-gradient.css";
 import "./info-pages.css";
 import "./footer-theme.css";
+import "./v1-final-polish.css";
 import SiteFooter from "@/components/layout/SiteFooter";
 import FloatingActions from "@/components/layout/FloatingActions";
 

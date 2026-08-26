@@ -18,8 +18,23 @@ const notoSansKR = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "생활도구 | 회원가입 없이 바로 쓰는 무료 생활도구",
-  description: "돈, 집, 자동차, 쇼핑, 직장, 생활에 필요한 계산과 비교를 회원가입 없이 무료로 이용하세요.",
+  metadataBase: new URL("https://life-tools-one.vercel.app"),
+  title: {
+    default: "생활도구 | 회원가입 없이 바로 쓰는 무료 생활 계산기·도구",
+    template: "%s | 생활도구",
+  },
+  description: "돈·금융, 집·주거, 자동차, 쇼핑, 직장·업무, 일상·생활에 필요한 계산·비교·차트·맞춤 양식을 회원가입 없이 무료로 이용하세요.",
+  applicationName: "생활도구",
+  category: "utilities",
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "생활도구",
+    title: "생활도구 | 무료 생활 계산기·도구",
+    description: "계산부터 비교, 차트, PDF·CSV 맞춤 양식까지 무료로 이용하세요.",
+    url: "/",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

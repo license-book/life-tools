@@ -1,4 +1,5 @@
 import type { ToolDefinition } from "@/types/tool";
+import { assertToolCatalog } from "@/lib/tools/catalogAudit";
 import { loanCalculatorTool } from "@/data/tools/loan-calculator";
 import { vatCalculatorTool } from "@/data/tools/vat-calculator";
 import { compoundInterestTool, depositInterestTool, discountTool, salaryNetTool, savingsInterestTool } from "@/data/tools/money-basics";
@@ -26,6 +27,8 @@ export const tools: ToolDefinition[] = [
   ...additionalTools,
   ...nextWaveTools,
 ];
+
+export const toolCatalogAudit = assertToolCatalog(tools);
 
 export function getToolBySlug(slug: string) { return tools.find((tool) => tool.slug === slug); }
 export function getToolsByCategory(category: ToolDefinition["category"]) { return tools.filter((tool) => tool.category === category); }

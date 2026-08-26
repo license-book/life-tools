@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { ToolDefinition } from "@/types/tool";
 import styles from "./AllToolsDirectory.module.css";
 
@@ -22,6 +22,18 @@ const categoryLabel: Record<string,string> = {
 export default function AllToolsDirectory({ tools }: { tools: ToolDefinition[] }) {
   const [query,setQuery] = useState("");
   const [category,setCategory] = useState("ALL");
+  const filtersRef = useRef<HTMLDivElement>(null);
+
+  const selectCategory=(code:string,event:React.MouseEvent<HTMLButtonElement>)=>{
+    setCategory(code);
+    const button=event.currentTarget;
+    requestAnimationFrame(()=>{
+      const rail=filtersRef.current;
+      if(!rail) return;
+      const target=button.offsetLeft-(rail.clientWidth-button.offsetWidth)/2;
+      rail.scrollTo({left:Math.max(0,target),behavior:"smooth"});
+    });
+  };
 
   const filtered = useMemo(()=>{
     const q=query.trim().toLowerCase();
@@ -44,8 +56,8 @@ export default function AllToolsDirectory({ tools }: { tools: ToolDefinition[] }
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
         <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="계산기·도구 이름 검색" />
       </label>
-      <div className={styles.filters} aria-label="카테고리 필터">
-        {categories.map(item=><button key={item.code} type="button" className={category===item.code?styles.active:undefined} onClick={()=>setCategory(item.code)}>{item.label}<span>{item.code==="ALL"?tools.length:tools.filter(t=>t.category===item.code).length}</span></button>)}
+      <div ref={filtersRef} className={styles.filters} aria-label="카테고리 필터">
+        {categories.map(item=><button key={item.code} type="button" className={category===item.code?styles.active:undefined} onClick={event=>selectCategory(item.code,event)}>{item.label}<span>{item.code==="ALL"?tools.length:tools.filter(t=>t.category===item.code).length}</span></button>)}
       </div>
     </div>
 

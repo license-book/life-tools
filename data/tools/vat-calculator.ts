@@ -8,7 +8,7 @@ export const vatCalculatorTool: ToolDefinition = {
   shortDescription: "공급가액과 부가세 포함 금액을 기준으로 부가가치세를 계산합니다.",
   heroDescription: "공급가액에서 부가세를 더하거나, 부가세 포함 합계금액에서 공급가액과 세액을 역산해보세요.",
   badges: ["무료", "회원가입 없음", "10% 자동 계산", "양방향 계산"],
-  relatedTools: ["loan-calculator", "salary-calculator", "discount-calculator"],
+  relatedTools: ["loan-calculator", "salary-net-calculator", "discount-calculator"],
   calculatorTitle: "금액만 입력하면 부가세를 바로 계산합니다",
   calculatorDescription: "공급가액 기준 계산과 부가세 포함 합계금액 역산 중 원하는 방식을 선택하세요.",
   sections: [

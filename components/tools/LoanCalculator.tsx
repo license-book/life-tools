@@ -28,29 +28,21 @@ const initialForm: LoanFormState = {
   method: "equal-payment",
 };
 
+const initialMonths = initialForm.years * 12;
+const initialEqualPayment = calculateLoan({ principal: initialForm.principal, annualRate: initialForm.annualRate, months: initialMonths, method: "equal-payment" });
+const initialEqualPrincipal = calculateLoan({ principal: initialForm.principal, annualRate: initialForm.annualRate, months: initialMonths, method: "equal-principal" });
+
 export default function LoanCalculator() {
   const [draft, setDraft] = useState<LoanFormState>(initialForm);
   const [applied, setApplied] = useState<LoanFormState>(initialForm);
+  const [calculated, setCalculated] = useState({ equalPayment: initialEqualPayment, equalPrincipal: initialEqualPrincipal });
   const principalRef = useRef<HTMLInputElement>(null);
   const rateRef = useRef<HTMLInputElement>(null);
   const yearsRef = useRef<HTMLInputElement>(null);
   const methodRef = useRef<HTMLSelectElement>(null);
 
   const months = Math.max(1, Math.round(applied.years * 12));
-  // Recompute from the applied snapshot on every render. This avoids any stale memoized
-  // payment when the user changes only the interest rate and then presses Calculate.
-  const equalPayment = calculateLoan({
-    principal: applied.principal,
-    annualRate: applied.annualRate,
-    months,
-    method: "equal-payment",
-  });
-  const equalPrincipal = calculateLoan({
-    principal: applied.principal,
-    annualRate: applied.annualRate,
-    months,
-    method: "equal-principal",
-  });
+  const { equalPayment, equalPrincipal } = calculated;
   const result = applied.method === "equal-payment" ? equalPayment : equalPrincipal;
   const comparisonMaxInterest = Math.max(equalPayment.totalInterest, equalPrincipal.totalInterest, 1);
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);
@@ -79,6 +71,10 @@ export default function LoanCalculator() {
       method: (methodRef.current?.value ?? draft.method) as RepaymentMethod,
     };
     if (!(next.principal > 0) || next.annualRate < 0 || !(next.years > 0)) return;
+    const nextMonths = Math.max(1, Math.round(next.years * 12));
+    const nextEqualPayment = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-payment" });
+    const nextEqualPrincipal = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-principal" });
+    setCalculated({ equalPayment: nextEqualPayment, equalPrincipal: nextEqualPrincipal });
     setDraft(next);
     setApplied(next);
   };

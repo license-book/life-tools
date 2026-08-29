@@ -1,0 +1,38 @@
+name: Fix loan calculation submit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-loan-calculation-submit.yml'
+      - 'scripts/fix-loan-calculation-submit.mjs'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Patch loan calculator
+        run: node scripts/fix-loan-calculation-submit.mjs
+      - name: Install dependencies
+        run: npm install
+      - name: Build verification
+        run: npm run build
+      - name: Commit verified fix
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/tools/LoanCalculator.tsx
+          git commit -m "Fix loan interest rate calculation refresh"
+          git push origin HEAD:main

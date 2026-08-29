@@ -6,6 +6,7 @@ import { AnnualMileageCalculator, DdayCalculator, EmergencyFundCalculator, Event
 import { BillableUtilizationCalculator, BreakDeductionCalculator, CagrCalculator, CashbackPriceCalculator, CurtainSizeCalculator, EvChargeTimeCalculator, PricePerUseCalculator, RatioSplitCalculator, RealReturnCalculator, StorageVolumeCalculator, TireDiameterCalculator, WeightedAverageCalculator } from "@/components/tools/AdditionalCalculators";
 import NextWaveCalculator from "@/components/tools/NextWaveCalculators";
 import UnitConverterCalculator from "@/components/tools/UnitConverterCalculator";
+import DistanceSpeedTimeCalculator from "@/components/tools/DistanceSpeedTimeCalculator";
 import { getToolBySlug } from "@/data/tools";
 import { createToolMetadata } from "@/lib/tools/engine";
 
@@ -44,6 +45,7 @@ const calculators = {
   "billable-utilization": <BillableUtilizationCalculator />,
   "ratio-split": <RatioSplitCalculator />,
   "weighted-average": <WeightedAverageCalculator />,
+  "distance-speed-time": <DistanceSpeedTimeCalculator />,
   ...nextWave,
   ...unitConverters,
 } as const;

@@ -5,6 +5,7 @@ const root = process.cwd();
 const toolsDir = path.join(root, "components", "tools");
 const skip = new Set([
   "LoanCalculator.tsx",
+  "VatCalculator.tsx",
   "ManualCalculatorLayout.tsx",
   "AllToolsDirectory.tsx",
   "AutoKoreanMoneyHints.tsx",
@@ -109,15 +110,6 @@ for (const name of fs.readdirSync(toolsDir).filter((name) => name.endsWith(".tsx
     const next = source.replace(nextWaveLayout, 'return <ManualCalculatorLayout inputs={<>$1</>} result={<section className="panel">$2</section>}/>;');
     if (next !== source) {
       source = next.replace('입력값을 바꾸면 결과와 차트가 즉시 갱신됩니다.', '계산하기를 누르면 결과와 차트가 입력값 기준으로 갱신됩니다.');
-      changed = true;
-    }
-  }
-
-  if (name === "VatCalculator.tsx") {
-    const vatLayout = /return \(\s*<div className="tool-layout">\s*<section className="panel no-print"([^>]*)>([\s\S]*?)<\/section>\s*(<section className="panel print-summary"[\s\S]*?<\/section>)\s*(<section className="panel full-width">[\s\S]*?<\/section>)\s*<\/div>\s*\);/g;
-    const next = source.replace(vatLayout, 'return (\n    <ManualCalculatorLayout inputs={<>$2</>} result={<>{$3$4</>}/>\n  );');
-    if (next !== source) {
-      source = next;
       changed = true;
     }
   }

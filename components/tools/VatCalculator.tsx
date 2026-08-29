@@ -1,35 +1,37 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type Mode = "supply" | "total";
+type VatResult = { supply: number; vat: number; total: number };
 
 function formatWon(value: number) {
   return `${Math.round(value).toLocaleString("ko-KR")}원`;
 }
 
+function calculateVat(mode: Mode, amount: number): VatResult {
+  const safeAmount = Math.max(0, amount || 0);
+  if (mode === "supply") {
+    const supply = safeAmount;
+    const vat = Math.round(supply * 0.1);
+    return { supply, vat, total: supply + vat };
+  }
+  const total = safeAmount;
+  const supply = Math.round(total / 1.1);
+  const vat = total - supply;
+  return { supply, vat, total };
+}
+
 export default function VatCalculator() {
   const [mode, setMode] = useState<Mode>("supply");
   const [amount, setAmount] = useState(100000);
+  const [result, setResult] = useState<VatResult>(() => calculateVat("supply", 100000));
 
-  const result = useMemo(() => {
-    const safeAmount = Math.max(0, amount || 0);
-
-    if (mode === "supply") {
-      const supply = safeAmount;
-      const vat = Math.round(supply * 0.1);
-      return { supply, vat, total: supply + vat };
-    }
-
-    const total = safeAmount;
-    const supply = Math.round(total / 1.1);
-    const vat = total - supply;
-    return { supply, vat, total };
-  }, [mode, amount]);
-
+  const runCalculation = () => setResult(calculateVat(mode, amount));
   const reset = () => {
     setMode("supply");
     setAmount(100000);
+    setResult(calculateVat("supply", 100000));
   };
 
   return (
@@ -62,8 +64,9 @@ export default function VatCalculator() {
         <div className="notice">일반적인 국내 과세 거래의 표준 부가가치세율 10%를 기준으로 계산합니다.</div>
         <div className="action-row">
           <button type="button" className="secondary" onClick={reset}>초기화</button>
-          <button type="button" className="primary" onClick={() => window.print()}>인쇄 · PDF 저장</button>
+          <button type="button" className="primary" onClick={runCalculation}>부가세 계산하기</button>
         </div>
+        <p className="resource-note">입력값을 변경한 뒤 계산하기를 누르면 오른쪽 결과가 새 조건으로 갱신됩니다.</p>
       </section>
 
       <section className="panel print-summary" aria-live="polite">
@@ -75,6 +78,7 @@ export default function VatCalculator() {
           <div className="stat"><small>합계금액</small><strong>{formatWon(result.total)}</strong></div>
           <div className="stat"><small>적용 세율</small><strong>10%</strong></div>
         </div>
+        <div className="action-row no-print"><button type="button" className="secondary" onClick={() => window.print()}>인쇄 · PDF 저장</button></div>
         <p className="resource-note no-print">회원가입이나 이메일 입력 없이 바로 계산하고 브라우저에서 PDF로 저장할 수 있습니다.</p>
       </section>
 

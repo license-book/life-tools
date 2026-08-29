@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useState, type ReactNode } from "react";
 
 type Props = {
   inputs: ReactNode;
@@ -17,7 +17,7 @@ export default function ManualCalculatorLayout({
   const [calculatedAt, setCalculatedAt] = useState(0);
 
   const runCalculation = useCallback(() => {
-    setAppliedResult(() => result);
+    setAppliedResult(<Fragment key={`calculated-${Date.now()}`}>{result}</Fragment>);
     setCalculatedAt((value) => value + 1);
   }, [result]);
 

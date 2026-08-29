@@ -74,18 +74,23 @@ for (const name of fs.readdirSync(toolsDir).filter((name) => name.endsWith(".tsx
     if (line.includes("function L({children,result}")) {
       lines[index] = 'function L({children,result}:{children:ReactNode;result:ReactNode}){return <ManualCalculatorLayout inputs={children} result={result}/>;}';
       changed = true;
-      continue;
-    }
-
-    const direct = /return <div className="tool-layout"><section className="panel">([\s\S]*?)<\/section><section className="panel">([\s\S]*?)<\/section><\/div>/;
-    if (direct.test(line)) {
-      lines[index] = line.replace(direct, 'return <ManualCalculatorLayout inputs={<>{$1</>} result={<section className="panel">$2</section>}/>');
-      changed = true;
     }
   }
 
+  source = lines.join("\n");
+
+  const direct = /return <div className="tool-layout">\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<\/div>/g;
+  const transformed = source.replace(
+    direct,
+    'return <ManualCalculatorLayout inputs={<>{$2</>} result={<section className="panel"$3>$4</section>}/>'
+  );
+  if (transformed !== source) {
+    source = transformed;
+    changed = true;
+  }
+
   if (changed) {
-    source = addImport(lines.join("\n"));
+    source = addImport(source);
     fs.writeFileSync(file, source);
     changedFiles.push(name);
   }

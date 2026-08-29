@@ -37,14 +37,20 @@ export default function LoanCalculator() {
   const methodRef = useRef<HTMLSelectElement>(null);
 
   const months = Math.max(1, Math.round(applied.years * 12));
-  const equalPayment = useMemo(
-    () => calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-payment" }),
-    [applied.principal, applied.annualRate, months],
-  );
-  const equalPrincipal = useMemo(
-    () => calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-principal" }),
-    [applied.principal, applied.annualRate, months],
-  );
+  // Recompute from the applied snapshot on every render. This avoids any stale memoized
+  // payment when the user changes only the interest rate and then presses Calculate.
+  const equalPayment = calculateLoan({
+    principal: applied.principal,
+    annualRate: applied.annualRate,
+    months,
+    method: "equal-payment",
+  });
+  const equalPrincipal = calculateLoan({
+    principal: applied.principal,
+    annualRate: applied.annualRate,
+    months,
+    method: "equal-principal",
+  });
   const result = applied.method === "equal-payment" ? equalPayment : equalPrincipal;
   const comparisonMaxInterest = Math.max(equalPayment.totalInterest, equalPrincipal.totalInterest, 1);
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);

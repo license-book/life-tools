@@ -9,3 +9,4 @@ s=s.replace(/    setCalculation\(\(current\) => \(\{ \.\.\.current, inputs: \{ \
 if (s.includes('setCalculation(') || s.includes('calculation.inputs')) throw new Error('loan calculation state cleanup incomplete');
 fs.writeFileSync(path,s);
 console.log('Patched loan calculator to direct render from applied inputs.');
+// Trigger final execution of this migration after workflow creation.

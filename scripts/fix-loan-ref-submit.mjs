@@ -1,0 +1,13 @@
+import fs from "node:fs";
+const path = "components/tools/LoanCalculator.tsx";
+let s = fs.readFileSync(path, "utf8");
+s = s.replace('import { useMemo, useState } from "react";', 'import { useMemo, useRef, useState } from "react";');
+s = s.replace('  const [draft, setDraft] = useState<LoanFormState>(initialForm);\n  const [applied, setApplied] = useState<LoanFormState>(initialForm);', '  const [draft, setDraft] = useState<LoanFormState>(initialForm);\n  const [applied, setApplied] = useState<LoanFormState>(initialForm);\n  const principalRef = useRef<HTMLInputElement>(null);\n  const rateRef = useRef<HTMLInputElement>(null);\n  const yearsRef = useRef<HTMLInputElement>(null);\n  const methodRef = useRef<HTMLSelectElement>(null);');
+s = s.replace('  const calculate = () => {\n    if (!isValid) return;\n    setApplied({ ...draft });\n  };', '  const calculate = () => {\n    const next: LoanFormState = {\n      principal: Number(principalRef.current?.value ?? draft.principal),\n      annualRate: Number(rateRef.current?.value ?? draft.annualRate),\n      years: Number(yearsRef.current?.value ?? draft.years),\n      method: (methodRef.current?.value ?? draft.method) as RepaymentMethod,\n    };\n    if (!(next.principal > 0) || next.annualRate < 0 || !(next.years > 0)) return;\n    setDraft(next);\n    setApplied(next);\n  };');
+s = s.replace('input id="principal" type="number"', 'input ref={principalRef} id="principal" type="number"');
+s = s.replace('input id="rate" type="number"', 'input ref={rateRef} id="rate" type="number"');
+s = s.replace('input id="years" type="number"', 'input ref={yearsRef} id="years" type="number"');
+s = s.replace('select id="method" value={draft.method}', 'select ref={methodRef} id="method" value={draft.method}');
+s = s.replace('<div className="tool-layout" data-applied-rate={applied.annualRate}>', '<div className="tool-layout" data-draft-rate={draft.annualRate} data-applied-rate={applied.annualRate}>');
+fs.writeFileSync(path, s);
+console.log("Patched LoanCalculator to read the exact visible input values through refs at execution time.");

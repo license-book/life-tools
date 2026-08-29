@@ -1,8 +1,9 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 import { useState, type ReactNode } from "react";
 const fmt=(n:number,d=2)=>Number.isFinite(n)?n.toLocaleString("ko-KR",{maximumFractionDigits:d}):"0";
 const won=(n:number)=>`${Math.round(Number.isFinite(n)?n:0).toLocaleString("ko-KR")}원`;
-const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><div className="tool-layout"><section className="panel">{children}</section><section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section></div>;
+const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><ManualCalculatorLayout inputs={children} result={<section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section>}/>;
 const Num=({label,value,set,step=1}:{label:string,value:number,set:(n:number)=>void,step?:number})=><div className="field"><label>{label}</label><input type="number" min="0" step={step} value={value} onChange={e=>{if(e.target.value!=="")set(Number(e.target.value))}}/></div>;
 const DateField=({label,value,set}:{label:string,value:string,set:(v:string)=>void})=><div className="field"><label>{label}</label><input type="date" required value={value} onChange={e=>{if(e.target.value)set(e.target.value)}}/></div>;
 const dateOnly=(s:string)=>{const [y,m,d]=s.split("-").map(Number);return y&&m&&d?new Date(y,m-1,d):new Date(NaN)};

@@ -1,4 +1,5 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 
 import { useMemo, useState } from "react";
 import { convertAll, convertUnit, getUnitGroup, unitGroups } from "@/lib/calculator/unitConverter";
@@ -42,19 +43,16 @@ export default function UnitConverterCalculator({type}:{type:string}){
   };
   const swap=()=>{setFromKey(to.key);setToKey(from.key)};
 
-  return <div className="tool-layout">
-    <section className="panel">
+  return <ManualCalculatorLayout inputs={<>
       {!locked && <div className="field"><label>변환 종류</label><select value={group.key} onChange={e=>changeGroup(e.target.value)}>{unitGroups.map(g=><option key={g.key} value={g.key}>{g.label}</option>)}</select></div>}
       <div className="field"><label>변환할 값</label><input type="number" step="any" value={value} onChange={e=>setValue(Number(e.target.value))}/></div>
       <div className="field"><label>기준 단위</label><select value={from.key} onChange={e=>setFromKey(e.target.value)}>{group.units.map(u=><option key={u.key} value={u.key}>{u.label} ({u.symbol})</option>)}</select></div>
       <div className="action-row no-print"><button type="button" className="secondary" onClick={swap}>단위 서로 바꾸기</button></div>
       <div className="field"><label>변환 단위</label><select value={to.key} onChange={e=>setToKey(e.target.value)}>{group.units.map(u=><option key={u.key} value={u.key}>{u.label} ({u.symbol})</option>)}</select></div>
-    </section>
-    <section className="panel">
+    </>} result={<section className="panel">
       <div className="result-main">{fmt(value)} {from.symbol} = {fmt(result)} {to.symbol}</div>
       <div className="stats">{all.filter(item=>item.key!==from.key).slice(0,8).map(item=><div className="stat" key={item.key}><small>{item.label}</small><strong>{fmt(item.value)} {item.symbol}</strong></div>)}</div>
       <div className="notice" style={{marginTop:16}}>입력값을 기준으로 같은 종류의 주요 단위를 한 번에 비교합니다. 소수점은 보기 좋게 반올림해 표시합니다.</div>
       <div className="action-row no-print"><button type="button" className="secondary" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div>
-    </section>
-  </div>;
+    </section>}/>;
 }

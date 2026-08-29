@@ -1,4 +1,5 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 
 import { useMemo, useState } from "react";
 import NextWaveCharts from "@/components/tools/NextWaveCharts";
@@ -41,8 +42,5 @@ export default function NextWaveCalculator({type}:{type:string}){
   if(!config) return <div className="notice">계산기 설정을 찾을 수 없습니다.</div>;
   const parsed=Object.fromEntries(config.fields.map(f=>[f.key,Number(values[f.key]||0)]));
   const results=config.calc(parsed);
-  return <div className="tool-layout">
-    <div className="panel"><h2>값 입력</h2>{config.fields.map(f=><div className="field" key={f.key}><label htmlFor={`${type}-${f.key}`}>{f.label}</label><input id={`${type}-${f.key}`} type="number" value={values[f.key]??""} step={f.step??1} min={f.min??0} onChange={e=>setValues(s=>({...s,[f.key]:e.target.value}))}/>{f.unit?<div className="field-help">단위: {f.unit}</div>:null}</div>)}</div>
-    <div className="panel"><h2>계산 결과</h2><div className="stats">{results.map((r,i)=><div className="stat" key={`${r.label}-${i}`}><small>{r.label}</small><strong>{r.value}</strong></div>)}</div><div style={{marginTop:18}}><NextWaveCharts type={type} values={parsed}/></div><p className="resource-note">입력값을 바꾸면 결과와 차트가 즉시 갱신됩니다. 실제 계약·요금·법정 적용 기준이 있는 경우 최신 기준을 별도로 확인하세요.</p></div>
-  </div>;
+  return <ManualCalculatorLayout inputs={<><h2>값 입력</h2>{config.fields.map(f=><div className="field" key={f.key}><label htmlFor={`${type}-${f.key}`}>{f.label}</label><input id={`${type}-${f.key}`} type="number" value={values[f.key]??""} step={f.step??1} min={f.min??0} onChange={e=>setValues(s=>({...s,[f.key]:e.target.value}))}/>{f.unit?<div className="field-help">단위: {f.unit}</div>:null}</div>)}</>} result={<section className="panel"><h2>계산 결과</h2><div className="stats">{results.map((r,i)=><div className="stat" key={`${r.label}-${i}`}><small>{r.label}</small><strong>{r.value}</strong></div>)}</div><div style={{marginTop:18}}><NextWaveCharts type={type} values={parsed}/></div><p className="resource-note">계산하기를 누르면 결과와 차트가 입력값 기준으로 갱신됩니다. 실제 계약·요금·법정 적용 기준이 있는 경우 최신 기준을 별도로 확인하세요.</p></section>}/>;
 }

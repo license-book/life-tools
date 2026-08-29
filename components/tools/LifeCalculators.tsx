@@ -1,10 +1,11 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 import { useMemo, useState, type ReactNode } from "react";
 
 const dayMs=86400000;
 const dateOnly=(s:string)=>{const [y,m,d]=s.split("-").map(Number);return y&&m&&d?new Date(y,m-1,d):new Date(NaN)};
 const fmtDate=(d:Date)=>Number.isFinite(d.getTime())?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:"날짜를 확인하세요";
-const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><div className="tool-layout"><section className="panel">{children}</section><section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section></div>;
+const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><ManualCalculatorLayout inputs={children} result={<section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section>}/>;
 const DateField=({label,value,set,max}:{label:string,value:string,set:(v:string)=>void,max?:string})=><div className="field"><label>{label}</label><input type="date" required value={value} max={max} onChange={e=>{if(e.target.value)set(e.target.value)}}/></div>;
 const Num=({label,value,set,step=1,min=0,max}:{label:string,value:number,set:(v:number)=>void,step?:number,min?:number,max?:number})=><div className="field"><label>{label}</label><input type="number" min={min} max={max} step={step} value={value} onChange={e=>{if(e.target.value!=="")set(Number(e.target.value))}}/></div>;
 

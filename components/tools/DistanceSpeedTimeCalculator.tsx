@@ -1,4 +1,5 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 
 import { useMemo, useState } from "react";
 import { convertUnit } from "@/lib/calculator/unitConverter";
@@ -52,8 +53,7 @@ export default function DistanceSpeedTimeCalculator(){
       ? `${fmt(convertUnit("length",result.base,"m",distanceUnit))} ${distanceLabels[distanceUnit]}`
       : `${fmt(fromSeconds(result.base,timeUnit))} ${timeLabels[timeUnit]}`;
 
-  return <div className="tool-layout">
-    <section className="panel">
+  return <ManualCalculatorLayout inputs={<>
       <span className="category-label">계산할 항목</span>
       <div className="field"><label htmlFor="dst-mode">무엇을 계산할까요?</label><select id="dst-mode" value={mode} onChange={e=>setMode(e.target.value as Mode)}><option value="speed">속도 계산</option><option value="distance">거리 계산</option><option value="time">시간 계산</option></select></div>
 
@@ -64,15 +64,12 @@ export default function DistanceSpeedTimeCalculator(){
       {mode!=="time"?<div className="field"><label>시간</label><div style={{display:"grid",gridTemplateColumns:"1fr 120px",gap:8}}><input type="number" min="0" step="0.01" value={time} onChange={e=>setTime(Number(e.target.value))}/><select value={timeUnit} onChange={e=>setTimeUnit(e.target.value as TimeUnit)}><option value="hour">시간</option><option value="min">분</option><option value="sec">초</option></select></div></div>:null}
 
       <div className="notice">공식: 속도 = 거리 ÷ 시간 · 거리 = 속도 × 시간 · 시간 = 거리 ÷ 속도</div>
-    </section>
-
-    <section className="panel" aria-live="polite">
+    </>} result={<section className="panel" aria-live="polite">
       <span className="category-label">계산 결과</span>
       <div className="result-main">{mainResult}</div>
       {mode==="speed"?<div className="stats"><div className="stat"><small>km/h</small><strong>{fmt(convertUnit("speed",result.base,"mps","kmh"))} km/h</strong></div><div className="stat"><small>mph</small><strong>{fmt(convertUnit("speed",result.base,"mps","mph"))} mph</strong></div><div className="stat"><small>m/s</small><strong>{fmt(result.base)} m/s</strong></div></div>:null}
       {mode==="distance"?<div className="stats"><div className="stat"><small>킬로미터</small><strong>{fmt(convertUnit("length",result.base,"m","km"))} km</strong></div><div className="stat"><small>마일</small><strong>{fmt(convertUnit("length",result.base,"m","mile"))} mile</strong></div><div className="stat"><small>미터</small><strong>{fmt(result.base)} m</strong></div></div>:null}
       {mode==="time"?<div className="stats"><div className="stat"><small>시간</small><strong>{fmt(fromSeconds(result.base,"hour"))}시간</strong></div><div className="stat"><small>분</small><strong>{fmt(fromSeconds(result.base,"min"))}분</strong></div><div className="stat"><small>초</small><strong>{fmt(result.base)}초</strong></div></div>:null}
       <ToolOutputActions />
-    </section>
-  </div>;
+    </section>}/>;
 }

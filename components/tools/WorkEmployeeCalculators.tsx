@@ -1,8 +1,9 @@
 "use client";
+import ManualCalculatorLayout from "@/components/tools/ManualCalculatorLayout";
 import {useState,type ReactNode} from "react";
 const won=(n:number)=>`${Math.round(Number.isFinite(n)?n:0).toLocaleString("ko-KR")}원`;
 const fmt=(n:number,d=2)=>Number.isFinite(n)?n.toLocaleString("ko-KR",{maximumFractionDigits:d}):"0";
-const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><div className="tool-layout"><section className="panel">{children}</section><section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section></div>;
+const Layout=({children,result}:{children:ReactNode,result:ReactNode})=><ManualCalculatorLayout inputs={children} result={<section className="panel">{result}<div className="action-row no-print"><button className="secondary" type="button" onClick={()=>window.print()}>인쇄 · PDF 저장</button></div></section>}/>;
 const Num=({label,value,set,step=1}:{label:string,value:number,set:(n:number)=>void,step?:number})=><div className="field"><label>{label}</label><input type="number" min="0" step={step} value={value} onChange={e=>set(Number(e.target.value))}/></div>;
 
 export function MinimumWageMonthlyCalculator(){const [hourly,setHourly]=useState(10320),[daily,setDaily]=useState(8),[weekly,setWeekly]=useState(40);const dailyPay=hourly*daily,weeklyPay=hourly*weekly,monthlySimple=hourly*weekly*52/12,official=hourly*209;return <Layout result={<><span className="category-label">2026 공식 월 환산액</span><div className="result-main">{won(official)}</div><div className="stats"><div className="stat"><small>일급</small><strong>{won(dailyPay)}</strong></div><div className="stat"><small>주급(근로시간만)</small><strong>{won(weeklyPay)}</strong></div><div className="stat"><small>단순 월 환산</small><strong>{won(monthlySimple)}</strong></div></div><div className="notice">시급 10,320원·월 209시간 공식 환산액은 주 40시간과 유급주휴 8시간을 포함한 기준입니다.</div></>}><Num label="시급(2026 기본값)" value={hourly} set={setHourly}/><Num label="하루 근로시간" value={daily} set={setDaily} step={0.5}/><Num label="주 근로시간" value={weekly} set={setWeekly} step={0.5}/></Layout>}

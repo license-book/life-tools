@@ -1,0 +1,33 @@
+name: Test loan rate regression
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'components/tools/LoanCalculator.tsx'
+      - 'lib/calculator/loan.ts'
+      - 'scripts/test-loan-rate.mjs'
+      - '.github/workflows/test-loan-rate.yml'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm install --no-save playwright@1.55.0 && npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Start production server
+        run: |
+          npm run start -- -H 127.0.0.1 > /tmp/life-tools-server.log 2>&1 &
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/tools/loan-calculator >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/life-tools-server.log
+          exit 1
+      - name: Verify 4.2 to 5.2 percent changes monthly payment
+        run: node scripts/test-loan-rate.mjs

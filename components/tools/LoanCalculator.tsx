@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { calculateLoan, type RepaymentMethod } from "@/lib/calculator/loan";
 import ToolOutputActions from "@/components/tools/ToolOutputActions";
 import ToolChart from "@/components/tools/ToolChart";
@@ -31,6 +31,10 @@ const initialForm: LoanFormState = {
 export default function LoanCalculator() {
   const [draft, setDraft] = useState<LoanFormState>(initialForm);
   const [applied, setApplied] = useState<LoanFormState>(initialForm);
+  const principalRef = useRef<HTMLInputElement>(null);
+  const rateRef = useRef<HTMLInputElement>(null);
+  const yearsRef = useRef<HTMLInputElement>(null);
+  const methodRef = useRef<HTMLSelectElement>(null);
 
   const months = Math.max(1, Math.round(applied.years * 12));
   const equalPayment = useMemo(
@@ -62,8 +66,15 @@ export default function LoanCalculator() {
   }, [result]);
 
   const calculate = () => {
-    if (!isValid) return;
-    setApplied({ ...draft });
+    const next: LoanFormState = {
+      principal: Number(principalRef.current?.value ?? draft.principal),
+      annualRate: Number(rateRef.current?.value ?? draft.annualRate),
+      years: Number(yearsRef.current?.value ?? draft.years),
+      method: (methodRef.current?.value ?? draft.method) as RepaymentMethod,
+    };
+    if (!(next.principal > 0) || next.annualRate < 0 || !(next.years > 0)) return;
+    setDraft(next);
+    setApplied(next);
   };
 
   const selectResultMethod = (nextMethod: RepaymentMethod) => {
@@ -87,32 +98,32 @@ export default function LoanCalculator() {
   };
 
   return (
-    <div className="tool-layout" data-applied-rate={applied.annualRate}>
+    <div className="tool-layout" data-draft-rate={draft.annualRate} data-applied-rate={applied.annualRate}>
       <section className="panel no-print" aria-labelledby="loan-input-title">
         <span className="category-label">STEP 1</span>
         <h2 id="loan-input-title">대출 조건 입력</h2>
         <div className="field">
           <label htmlFor="principal">대출금액</label>
-          <input id="principal" type="number" min="0" step="1000000" value={draft.principal}
+          <input ref={principalRef} id="principal" type="number" min="0" step="1000000" value={draft.principal}
             onChange={(e) => setDraft((current) => ({ ...current, principal: Number(e.target.value) }))}
             onKeyDown={(e) => e.key === "Enter" && calculate()} />
           <KoreanMoneyHint value={draft.principal} />
         </div>
         <div className="field">
           <label htmlFor="rate">연 이자율 (%)</label>
-          <input id="rate" type="number" min="0" max="100" step="0.1" value={draft.annualRate}
+          <input ref={rateRef} id="rate" type="number" min="0" max="100" step="0.1" value={draft.annualRate}
             onChange={(e) => setDraft((current) => ({ ...current, annualRate: Number(e.target.value) }))}
             onKeyDown={(e) => e.key === "Enter" && calculate()} />
         </div>
         <div className="field">
           <label htmlFor="years">대출기간 (년)</label>
-          <input id="years" type="number" min="1" max="50" step="1" value={draft.years}
+          <input ref={yearsRef} id="years" type="number" min="1" max="50" step="1" value={draft.years}
             onChange={(e) => setDraft((current) => ({ ...current, years: Number(e.target.value) }))}
             onKeyDown={(e) => e.key === "Enter" && calculate()} />
         </div>
         <div className="field">
           <label htmlFor="method">상환계획표에 적용할 방식</label>
-          <select id="method" value={draft.method} onChange={(e) => setDraft((current) => ({ ...current, method: e.target.value as RepaymentMethod }))}>
+          <select ref={methodRef} id="method" value={draft.method} onChange={(e) => setDraft((current) => ({ ...current, method: e.target.value as RepaymentMethod }))}>
             <option value="equal-payment">원리금균등상환</option>
             <option value="equal-principal">원금균등상환</option>
           </select>

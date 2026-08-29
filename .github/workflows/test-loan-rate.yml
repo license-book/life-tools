@@ -32,4 +32,4 @@ jobs:
       - name: Verify 4.2 to 5.2 percent changes monthly payment
         run: node scripts/test-loan-rate.mjs
       # Regression verifies the calculation result snapshot created at execution time.
-      # Final verification rerun after direct applied-input result fix.
+      # Verify final non-memoized applied-input calculation.

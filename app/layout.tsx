@@ -11,6 +11,7 @@ import "./footer-theme.css";
 import "./v1-final-polish.css";
 import SiteFooter from "@/components/layout/SiteFooter";
 import FloatingActions from "@/components/layout/FloatingActions";
+import AutoKoreanMoneyHints from "@/components/tools/AutoKoreanMoneyHints";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko" className={notoSansKR.variable}>
-      <body>{children}<FloatingActions/><SiteFooter/></body>
+      <body>{children}<AutoKoreanMoneyHints/><FloatingActions/><SiteFooter/></body>
     </html>
   );
 }

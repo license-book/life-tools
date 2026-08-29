@@ -65,8 +65,28 @@ export default function LoanCalculator() {
   }, [result]);
 
   const calculate = () => {
-    if (!isValid) return;
-    setApplied({ principal, annualRate, years, method });
+    const principalInput = document.getElementById("principal") as HTMLInputElement | null;
+    const rateInput = document.getElementById("rate") as HTMLInputElement | null;
+    const yearsInput = document.getElementById("years") as HTMLInputElement | null;
+    const methodInput = document.getElementById("method") as HTMLSelectElement | null;
+
+    const nextPrincipal = Number(principalInput?.value ?? principal);
+    const nextAnnualRate = Number(rateInput?.value ?? annualRate);
+    const nextYears = Number(yearsInput?.value ?? years);
+    const nextMethod = (methodInput?.value ?? method) as RepaymentMethod;
+
+    if (!(nextPrincipal > 0) || nextAnnualRate < 0 || !(nextYears > 0)) return;
+
+    setPrincipal(nextPrincipal);
+    setAnnualRate(nextAnnualRate);
+    setYears(nextYears);
+    setMethod(nextMethod);
+    setApplied({
+      principal: nextPrincipal,
+      annualRate: nextAnnualRate,
+      years: nextYears,
+      method: nextMethod,
+    });
   };
 
   const selectResultMethod = (nextMethod: RepaymentMethod) => {
@@ -167,6 +187,7 @@ export default function LoanCalculator() {
           <div className="stat"><small>총 상환액</small><strong>{won.format(result.totalPayment)}원</strong></div>
           <div className="stat"><small>총 이자</small><strong>{won.format(result.totalInterest)}원</strong></div>
           <div className="stat"><small>대출기간</small><strong>{months}개월</strong></div>
+          <div className="stat"><small>적용 이자율</small><strong>연 {applied.annualRate}%</strong></div>
           <div className="stat"><small>상환방식</small><strong>{methodLabel[applied.method]}</strong></div>
         </div>
         <div className="action-row no-print" style={{ gridTemplateColumns: "repeat(3,minmax(0,1fr))" }}>

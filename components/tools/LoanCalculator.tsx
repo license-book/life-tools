@@ -34,15 +34,19 @@ const initialEqualPrincipal = calculateLoan({ principal: initialForm.principal, 
 
 export default function LoanCalculator() {
   const [draft, setDraft] = useState<LoanFormState>(initialForm);
-  const [applied, setApplied] = useState<LoanFormState>(initialForm);
-  const [calculated, setCalculated] = useState({ equalPayment: initialEqualPayment, equalPrincipal: initialEqualPrincipal });
+  const [calculation, setCalculation] = useState({
+    inputs: initialForm,
+    equalPayment: initialEqualPayment,
+    equalPrincipal: initialEqualPrincipal,
+  });
+  const applied = calculation.inputs;
   const principalRef = useRef<HTMLInputElement>(null);
   const rateRef = useRef<HTMLInputElement>(null);
   const yearsRef = useRef<HTMLInputElement>(null);
   const methodRef = useRef<HTMLSelectElement>(null);
 
   const months = Math.max(1, Math.round(applied.years * 12));
-  const { equalPayment, equalPrincipal } = calculated;
+  const { equalPayment, equalPrincipal } = calculation;
   const result = applied.method === "equal-payment" ? equalPayment : equalPrincipal;
   const comparisonMaxInterest = Math.max(equalPayment.totalInterest, equalPrincipal.totalInterest, 1);
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);
@@ -74,14 +78,13 @@ export default function LoanCalculator() {
     const nextMonths = Math.max(1, Math.round(next.years * 12));
     const nextEqualPayment = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-payment" });
     const nextEqualPrincipal = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-principal" });
-    setCalculated({ equalPayment: nextEqualPayment, equalPrincipal: nextEqualPrincipal });
+    setCalculation({ inputs: next, equalPayment: nextEqualPayment, equalPrincipal: nextEqualPrincipal });
     setDraft(next);
-    setApplied(next);
   };
 
   const selectResultMethod = (nextMethod: RepaymentMethod) => {
     setDraft((current) => ({ ...current, method: nextMethod }));
-    setApplied((current) => ({ ...current, method: nextMethod }));
+    setCalculation((current) => ({ ...current, inputs: { ...current.inputs, method: nextMethod } }));
   };
 
   const exportCsv = () => {

@@ -134,7 +134,7 @@ export default function LoanCalculator() {
 
       <section className="panel print-summary" aria-live="polite">
         <span className="category-label">STEP 2 · 계산 결과</span>
-        <div className="result-main" data-testid="loan-first-payment">첫 달 {won.format(result.monthlyFirstPayment)}원</div>
+        <div key={`${applied.principal}-${applied.annualRate}-${applied.years}-${applied.method}`} className="result-main" data-testid="loan-first-payment">첫 달 {won.format(result.monthlyFirstPayment)}원</div>
         <div className="stats">
           <div className="stat"><small>총 상환액</small><strong>{won.format(result.totalPayment)}원</strong></div>
           <div className="stat"><small>총 이자</small><strong>{won.format(result.totalInterest)}원</strong></div>

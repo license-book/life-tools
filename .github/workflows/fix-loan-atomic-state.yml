@@ -1,0 +1,32 @@
+name: Fix loan atomic calculation state
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fix-loan-atomic-state.mjs'
+      - '.github/workflows/fix-loan-atomic-state.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/fix-loan-atomic-state.mjs
+      - run: npm install
+      - run: npm run build
+      - name: Commit fix
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/tools/LoanCalculator.tsx
+          git commit -m "Commit loan inputs and results atomically"
+          git push origin HEAD:main

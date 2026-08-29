@@ -79,14 +79,47 @@ for (const name of fs.readdirSync(toolsDir).filter((name) => name.endsWith(".tsx
 
   source = lines.join("\n");
 
-  const direct = /return <div className="tool-layout">\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<\/div>/g;
+  const multilineLayoutHelper = /function Layout\(\{inputs,result\}:\{inputs:ReactNode;result:ReactNode\}\)\s*\{\s*return <div className="tool-layout"><section className="panel">\{inputs\}<\/section>\{result\}<\/div>;?\s*\}/g;
+  if (multilineLayoutHelper.test(source)) {
+    source = source.replace(multilineLayoutHelper, 'function Layout({inputs,result}:{inputs:ReactNode;result:ReactNode}){return <ManualCalculatorLayout inputs={inputs} result={result}/>;}');
+    changed = true;
+  }
+
+  const directTwoPanel = /return <div className="tool-layout">\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<section className="panel"([^>]*)>([\s\S]*?)<\/section>\s*<\/div>/g;
   const transformed = source.replace(
-    direct,
+    directTwoPanel,
     'return <ManualCalculatorLayout inputs={<>{$2</>} result={<section className="panel"$3>$4</section>}/>'
   );
   if (transformed !== source) {
     source = transformed;
     changed = true;
+  }
+
+  if (name === "ExpansionCalculators.tsx") {
+    const ddayLayout = /return <div className="tool-layout"><section className="panel">([\s\S]*?)<\/section>(<Result[\s\S]*?\/>)<\/div>}/g;
+    const next = source.replace(ddayLayout, 'return <ManualCalculatorLayout inputs={<>{$1</>} result={$2}/>;}');
+    if (next !== source) {
+      source = next;
+      changed = true;
+    }
+  }
+
+  if (name === "NextWaveCalculators.tsx") {
+    const nextWaveLayout = /return <div className="tool-layout">\s*<div className="panel">([\s\S]*?)<\/div>\s*<div className="panel">([\s\S]*?)<\/div>\s*<\/div>;/g;
+    const next = source.replace(nextWaveLayout, 'return <ManualCalculatorLayout inputs={<>{$1</>} result={<section className="panel">$2</section>}/>;');
+    if (next !== source) {
+      source = next.replace('입력값을 바꾸면 결과와 차트가 즉시 갱신됩니다.', '계산하기를 누르면 결과와 차트가 입력값 기준으로 갱신됩니다.');
+      changed = true;
+    }
+  }
+
+  if (name === "VatCalculator.tsx") {
+    const vatLayout = /return \(\s*<div className="tool-layout">\s*<section className="panel no-print"([^>]*)>([\s\S]*?)<\/section>\s*(<section className="panel print-summary"[\s\S]*?<\/section>)\s*(<section className="panel full-width">[\s\S]*?<\/section>)\s*<\/div>\s*\);/g;
+    const next = source.replace(vatLayout, 'return (\n    <ManualCalculatorLayout inputs={<>{$2</>} result={<>{$3$4</>}/>\n  );');
+    if (next !== source) {
+      source = next;
+      changed = true;
+    }
   }
 
   if (changed) {

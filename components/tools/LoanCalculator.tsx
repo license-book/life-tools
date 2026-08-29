@@ -28,25 +28,23 @@ const initialForm: LoanFormState = {
   method: "equal-payment",
 };
 
-const initialMonths = initialForm.years * 12;
-const initialEqualPayment = calculateLoan({ principal: initialForm.principal, annualRate: initialForm.annualRate, months: initialMonths, method: "equal-payment" });
-const initialEqualPrincipal = calculateLoan({ principal: initialForm.principal, annualRate: initialForm.annualRate, months: initialMonths, method: "equal-principal" });
-
 export default function LoanCalculator() {
   const [draft, setDraft] = useState<LoanFormState>(initialForm);
-  const [calculation, setCalculation] = useState({
-    inputs: initialForm,
-    equalPayment: initialEqualPayment,
-    equalPrincipal: initialEqualPrincipal,
-  });
-  const applied = calculation.inputs;
+  const [applied, setApplied] = useState<LoanFormState>(initialForm);
   const principalRef = useRef<HTMLInputElement>(null);
   const rateRef = useRef<HTMLInputElement>(null);
   const yearsRef = useRef<HTMLInputElement>(null);
   const methodRef = useRef<HTMLSelectElement>(null);
 
   const months = Math.max(1, Math.round(applied.years * 12));
-  const { equalPayment, equalPrincipal } = calculation;
+  const equalPayment = useMemo(
+    () => calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-payment" }),
+    [applied.principal, applied.annualRate, months],
+  );
+  const equalPrincipal = useMemo(
+    () => calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-principal" }),
+    [applied.principal, applied.annualRate, months],
+  );
   const result = applied.method === "equal-payment" ? equalPayment : equalPrincipal;
   const comparisonMaxInterest = Math.max(equalPayment.totalInterest, equalPrincipal.totalInterest, 1);
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);
@@ -75,16 +73,13 @@ export default function LoanCalculator() {
       method: (methodRef.current?.value ?? draft.method) as RepaymentMethod,
     };
     if (!(next.principal > 0) || next.annualRate < 0 || !(next.years > 0)) return;
-    const nextMonths = Math.max(1, Math.round(next.years * 12));
-    const nextEqualPayment = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-payment" });
-    const nextEqualPrincipal = calculateLoan({ principal: next.principal, annualRate: next.annualRate, months: nextMonths, method: "equal-principal" });
-    setCalculation({ inputs: next, equalPayment: nextEqualPayment, equalPrincipal: nextEqualPrincipal });
+    setApplied(next);
     setDraft(next);
   };
 
   const selectResultMethod = (nextMethod: RepaymentMethod) => {
     setDraft((current) => ({ ...current, method: nextMethod }));
-    setCalculation((current) => ({ ...current, inputs: { ...current.inputs, method: nextMethod } }));
+    setApplied((current) => ({ ...current, method: nextMethod }));
   };
 
   const exportCsv = () => {

@@ -1,0 +1,49 @@
+name: Audit calculator execution
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-calculator-execution.mjs'
+      - '.github/workflows/audit-calculator-execution.yml'
+      - 'components/tools/**'
+      - 'app/tools/**'
+      - 'lib/**'
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install app dependencies
+        run: npm install
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Production build
+        run: npm run build
+      - name: Start production server
+        run: |
+          npm run start -- -H 127.0.0.1 > /tmp/life-tools-server.log 2>&1 &
+          echo $! > /tmp/life-tools-server.pid
+          for i in {1..60}; do
+            if curl -fsS http://127.0.0.1:3000/tools >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/life-tools-server.log
+          exit 1
+      - name: Verify input change -> click -> result change
+        run: node scripts/audit-calculator-execution.mjs
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-execution-audit
+          path: calculator-execution-audit.json
+          if-no-files-found: warn

@@ -13,7 +13,7 @@ import { lifeBasicsTools } from "@/data/tools/life-basics";
 import { expansionTools } from "@/data/tools/expansion-2026-08";
 import { additionalTools } from "@/data/tools/additional-2026-08-25";
 import { nextWaveTools } from "@/data/tools/next-wave-2026-08-26";
-import { unitConverterTools } from "@/data/tools/unit-converters";
+import { distanceSpeedTimeTool, unitConverterTools } from "@/data/tools/unit-converters";
 
 const canonicalSlugs = new Set(["unit-price", "installment-total", "weekly-pay", "freelance-rate"]);
 const expansionCatalogTools = expansionTools.filter((tool) => !canonicalSlugs.has(tool.slug));
@@ -34,6 +34,7 @@ export const tools: ToolDefinition[] = [
   ...expansionCatalogTools,
   ...normalizedAdditionalTools,
   ...nextWaveTools,
+  distanceSpeedTimeTool,
   ...unitConverterTools,
 ];
 

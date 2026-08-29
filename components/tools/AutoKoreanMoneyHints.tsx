@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { formatKoreanMoneyCompact } from "@/lib/tools/koreanMoney";
 
-const MONEY_LABEL = /(금액|가격|비용|급여|임금|상여|보증금|월세|전세|매매가|대출|원금|예산|보험료|세금|요금|단가|유가|연봉|시급|주급|수당|매출|소득|지출|자산|부채|공과금|관리비|할인액|상품가|정비|주차비|통행료|유류비|청소비|설치비|원\s*\/|원\)|원$)/;
+const MONEY_LABEL = /(금액|가격|비용|급여|임금|상여|보증금|월세|전세|매매가|대출|원금|예산|보험료|요금|단가|유가|연봉|시급|주급|수당|매출|소득|지출|자산|부채|공과금|관리비|할인액|상품가|정비|주차비|통행료|유류비|청소비|설치비|원\s*\/|원\)|원$)/;
+const NON_MONEY_LABEL = /(세율|이율|금리|수익률|할인율|비율|퍼센트|%|개월|기간|연령|나이|거리|속도|면적|무게|중량|온도|수량)/;
 
 function labelText(input: HTMLInputElement) {
   const field = input.closest(".field");
@@ -32,7 +33,7 @@ function ensureHint(input: HTMLInputElement) {
   if (!field) return;
 
   const text = labelText(input);
-  const shouldShow = MONEY_LABEL.test(text);
+  const shouldShow = MONEY_LABEL.test(text) && !NON_MONEY_LABEL.test(text);
   const existing = field.querySelector<HTMLElement>("[data-auto-korean-money-hint]");
 
   if (!shouldShow) {

@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const path='components/tools/LoanCalculator.tsx';
+let s=fs.readFileSync(path,'utf8');
+s=s.replace(/const initialMonths[\s\S]*?const initialEqualPrincipal = calculateLoan\([^\n]*\);\n\n/, '');
+s=s.replace(/  const \[calculation, setCalculation\] = useState\(\{[\s\S]*?  \}\);\n  const applied = calculation\.inputs;\n/, '  const [applied, setApplied] = useState<LoanFormState>(initialForm);\n');
+s=s.replace(/  const \{ equalPayment, equalPrincipal \} = calculation;\n/, '  const equalPayment = calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-payment" });\n  const equalPrincipal = calculateLoan({ principal: applied.principal, annualRate: applied.annualRate, months, method: "equal-principal" });\n');
+s=s.replace(/    const nextMonths = Math\.max\(1, Math\.round\(next\.years \* 12\)\);[\s\S]*?    setCalculation\(\{ inputs: next, equalPayment: nextEqualPayment, equalPrincipal: nextEqualPrincipal \}\);\n    setDraft\(next\);/, '    setApplied(next);\n    setDraft(next);');
+s=s.replace(/    setCalculation\(\(current\) => \(\{ \.\.\.current, inputs: \{ \.\.\.current\.inputs, method: nextMethod \} \} \)\);/, '    setApplied((current) => ({ ...current, method: nextMethod }));');
+if (s.includes('setCalculation(') || s.includes('calculation.inputs')) throw new Error('loan calculation state cleanup incomplete');
+fs.writeFileSync(path,s);
+console.log('Patched loan calculator to direct render from applied inputs.');

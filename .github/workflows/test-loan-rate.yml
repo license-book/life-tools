@@ -31,3 +31,4 @@ jobs:
           exit 1
       - name: Verify 4.2 to 5.2 percent changes monthly payment
         run: node scripts/test-loan-rate.mjs
+      # Keeps the rate-change regression explicit and independently runnable.

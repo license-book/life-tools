@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { calculateLoan, type RepaymentMethod } from "@/lib/calculator/loan";
 import ToolOutputActions from "@/components/tools/ToolOutputActions";
 import ToolChart from "@/components/tools/ToolChart";
+import KoreanMoneyHint from "@/components/tools/KoreanMoneyHint";
 
 const won = new Intl.NumberFormat("ko-KR", { maximumFractionDigits: 0 });
 const wonText = (value:number) => `${won.format(value)}원`;
@@ -20,21 +21,8 @@ export default function LoanCalculator() {
   const [method, setMethod] = useState<RepaymentMethod>("equal-payment");
 
   const months = Math.max(1, Math.round(years * 12));
-
-  const equalPayment = useMemo(() => calculateLoan({
-    principal,
-    annualRate,
-    months,
-    method: "equal-payment",
-  }), [principal, annualRate, months]);
-
-  const equalPrincipal = useMemo(() => calculateLoan({
-    principal,
-    annualRate,
-    months,
-    method: "equal-principal",
-  }), [principal, annualRate, months]);
-
+  const equalPayment = useMemo(() => calculateLoan({ principal, annualRate, months, method: "equal-payment" }), [principal, annualRate, months]);
+  const equalPrincipal = useMemo(() => calculateLoan({ principal, annualRate, months, method: "equal-principal" }), [principal, annualRate, months]);
   const result = method === "equal-payment" ? equalPayment : equalPrincipal;
   const comparisonMaxInterest = Math.max(equalPayment.totalInterest, equalPrincipal.totalInterest, 1);
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);
@@ -65,7 +53,7 @@ export default function LoanCalculator() {
         <div className="field">
           <label htmlFor="principal">대출금액</label>
           <input id="principal" type="number" min="0" step="1000000" value={principal} onChange={(e) => setPrincipal(Number(e.target.value))} />
-          <small className="field-help">예: 3억원 → 300000000</small>
+          <KoreanMoneyHint value={principal} />
         </div>
         <div className="field">
           <label htmlFor="rate">연 이자율 (%)</label>
@@ -108,31 +96,18 @@ export default function LoanCalculator() {
       </section>
 
       <section className="panel full-width comparison-panel">
-        <div className="section-heading-row">
-          <div>
-            <span className="category-label">STEP 3 · 자동 비교</span>
-            <h2>원리금균등 vs 원금균등</h2>
-          </div>
-          <span className="comparison-saving">총이자 차이 약 {won.format(interestSaving)}원</span>
-        </div>
+        <div className="section-heading-row"><div><span className="category-label">STEP 3 · 자동 비교</span><h2>원리금균등 vs 원금균등</h2></div><span className="comparison-saving">총이자 차이 약 {won.format(interestSaving)}원</span></div>
         <div className="compare-grid">
           <article className={`compare-card ${method === "equal-payment" ? "is-selected" : ""}`}>
             <div className="compare-title-row"><h3>원리금균등</h3><button className="text-button no-print" type="button" onClick={() => setMethod("equal-payment")}>이 방식 선택</button></div>
-            <dl className="compare-values">
-              <div><dt>첫 달 상환액</dt><dd>{won.format(equalPayment.monthlyFirstPayment)}원</dd></div>
-              <div><dt>총이자</dt><dd>{won.format(equalPayment.totalInterest)}원</dd></div>
-            </dl>
+            <dl className="compare-values"><div><dt>첫 달 상환액</dt><dd>{won.format(equalPayment.monthlyFirstPayment)}원</dd></div><div><dt>총이자</dt><dd>{won.format(equalPayment.totalInterest)}원</dd></div></dl>
             <div className="metric"><div className="metric-label"><span>총이자 규모</span><strong>{Math.round(equalPayment.totalInterest / comparisonMaxInterest * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPayment.totalInterest / comparisonMaxInterest * 100}%` }} /></div></div>
             <div className="metric"><div className="metric-label"><span>첫 달 부담</span><strong>{Math.round(equalPayment.monthlyFirstPayment / comparisonMaxFirstPayment * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPayment.monthlyFirstPayment / comparisonMaxFirstPayment * 100}%` }} /></div></div>
             <p>매월 상환액이 거의 일정해 월별 현금흐름을 관리하기 편한 방식입니다.</p>
           </article>
-
           <article className={`compare-card ${method === "equal-principal" ? "is-selected" : ""}`}>
             <div className="compare-title-row"><h3>원금균등</h3><button className="text-button no-print" type="button" onClick={() => setMethod("equal-principal")}>이 방식 선택</button></div>
-            <dl className="compare-values">
-              <div><dt>첫 달 상환액</dt><dd>{won.format(equalPrincipal.monthlyFirstPayment)}원</dd></div>
-              <div><dt>총이자</dt><dd>{won.format(equalPrincipal.totalInterest)}원</dd></div>
-            </dl>
+            <dl className="compare-values"><div><dt>첫 달 상환액</dt><dd>{won.format(equalPrincipal.monthlyFirstPayment)}원</dd></div><div><dt>총이자</dt><dd>{won.format(equalPrincipal.totalInterest)}원</dd></div></dl>
             <div className="metric"><div className="metric-label"><span>총이자 규모</span><strong>{Math.round(equalPrincipal.totalInterest / comparisonMaxInterest * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPrincipal.totalInterest / comparisonMaxInterest * 100}%` }} /></div></div>
             <div className="metric"><div className="metric-label"><span>첫 달 부담</span><strong>{Math.round(equalPrincipal.monthlyFirstPayment / comparisonMaxFirstPayment * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPrincipal.monthlyFirstPayment / comparisonMaxFirstPayment * 100}%` }} /></div></div>
             <p>초기 상환액은 더 크지만 원금이 빠르게 줄어 총이자가 적어질 수 있습니다.</p>
@@ -142,26 +117,10 @@ export default function LoanCalculator() {
       </section>
 
       <section className="panel full-width repayment-plan">
-        <div className="section-heading-row">
-          <div>
-            <span className="category-label">STEP 4 · 무료 결과물</span>
-            <h2>{methodLabel[method]} 월별 상환계획표</h2>
-          </div>
-          <span className="print-only print-meta">대출 {won.format(principal)}원 · 연 {annualRate}% · {months}개월</span>
-        </div>
+        <div className="section-heading-row"><div><span className="category-label">STEP 4 · 무료 결과물</span><h2>{methodLabel[method]} 월별 상환계획표</h2></div><span className="print-only print-meta">대출 {won.format(principal)}원 · 연 {annualRate}% · {months}개월</span></div>
         <p className="section-intro no-print">화면에는 초기 24개월을 먼저 보여드립니다. CSV에는 전체 기간이 포함되며, 인쇄/PDF에서는 전체 상환계획표를 출력합니다.</p>
-        <div className="table-wrap screen-schedule">
-          <table>
-            <thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
-            <tbody>{result.schedule.slice(0, 24).map((row) => (<tr key={row.month}><td>{row.month}개월</td><td>{won.format(row.payment)}원</td><td>{won.format(row.principal)}원</td><td>{won.format(row.interest)}원</td><td>{won.format(row.balance)}원</td></tr>))}</tbody>
-          </table>
-        </div>
-        <div className="table-wrap print-only print-schedule">
-          <table>
-            <thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
-            <tbody>{result.schedule.map((row) => (<tr key={row.month}><td>{row.month}</td><td>{won.format(row.payment)}</td><td>{won.format(row.principal)}</td><td>{won.format(row.interest)}</td><td>{won.format(row.balance)}</td></tr>))}</tbody>
-          </table>
-        </div>
+        <div className="table-wrap screen-schedule"><table><thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead><tbody>{result.schedule.slice(0, 24).map((row) => (<tr key={row.month}><td>{row.month}개월</td><td>{won.format(row.payment)}원</td><td>{won.format(row.principal)}원</td><td>{won.format(row.interest)}원</td><td>{won.format(row.balance)}원</td></tr>))}</tbody></table></div>
+        <div className="table-wrap print-only print-schedule"><table><thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead><tbody>{result.schedule.map((row) => (<tr key={row.month}><td>{row.month}</td><td>{won.format(row.payment)}</td><td>{won.format(row.principal)}</td><td>{won.format(row.interest)}</td><td>{won.format(row.balance)}</td></tr>))}</tbody></table></div>
       </section>
     </div>
   );

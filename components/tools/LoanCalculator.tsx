@@ -29,10 +29,7 @@ const initialForm: LoanFormState = {
 };
 
 export default function LoanCalculator() {
-  const [principal, setPrincipal] = useState(initialForm.principal);
-  const [annualRate, setAnnualRate] = useState(initialForm.annualRate);
-  const [years, setYears] = useState(initialForm.years);
-  const [method, setMethod] = useState<RepaymentMethod>(initialForm.method);
+  const [draft, setDraft] = useState<LoanFormState>(initialForm);
   const [applied, setApplied] = useState<LoanFormState>(initialForm);
 
   const months = Math.max(1, Math.round(applied.years * 12));
@@ -49,11 +46,11 @@ export default function LoanCalculator() {
   const comparisonMaxFirstPayment = Math.max(equalPayment.monthlyFirstPayment, equalPrincipal.monthlyFirstPayment, 1);
   const interestSaving = Math.abs(equalPayment.totalInterest - equalPrincipal.totalInterest);
   const isDirty =
-    principal !== applied.principal ||
-    annualRate !== applied.annualRate ||
-    years !== applied.years ||
-    method !== applied.method;
-  const isValid = principal > 0 && annualRate >= 0 && years > 0;
+    draft.principal !== applied.principal ||
+    draft.annualRate !== applied.annualRate ||
+    draft.years !== applied.years ||
+    draft.method !== applied.method;
+  const isValid = draft.principal > 0 && draft.annualRate >= 0 && draft.years > 0;
 
   const balanceTrend = useMemo(() => {
     const points = result.schedule
@@ -65,32 +62,12 @@ export default function LoanCalculator() {
   }, [result]);
 
   const calculate = () => {
-    const principalInput = document.getElementById("principal") as HTMLInputElement | null;
-    const rateInput = document.getElementById("rate") as HTMLInputElement | null;
-    const yearsInput = document.getElementById("years") as HTMLInputElement | null;
-    const methodInput = document.getElementById("method") as HTMLSelectElement | null;
-
-    const nextPrincipal = Number(principalInput?.value ?? principal);
-    const nextAnnualRate = Number(rateInput?.value ?? annualRate);
-    const nextYears = Number(yearsInput?.value ?? years);
-    const nextMethod = (methodInput?.value ?? method) as RepaymentMethod;
-
-    if (!(nextPrincipal > 0) || nextAnnualRate < 0 || !(nextYears > 0)) return;
-
-    setPrincipal(nextPrincipal);
-    setAnnualRate(nextAnnualRate);
-    setYears(nextYears);
-    setMethod(nextMethod);
-    setApplied({
-      principal: nextPrincipal,
-      annualRate: nextAnnualRate,
-      years: nextYears,
-      method: nextMethod,
-    });
+    if (!isValid) return;
+    setApplied({ ...draft });
   };
 
   const selectResultMethod = (nextMethod: RepaymentMethod) => {
-    setMethod(nextMethod);
+    setDraft((current) => ({ ...current, method: nextMethod }));
     setApplied((current) => ({ ...current, method: nextMethod }));
   };
 
@@ -110,84 +87,54 @@ export default function LoanCalculator() {
   };
 
   return (
-    <div className="tool-layout">
+    <div className="tool-layout" data-applied-rate={applied.annualRate}>
       <section className="panel no-print" aria-labelledby="loan-input-title">
         <span className="category-label">STEP 1</span>
         <h2 id="loan-input-title">대출 조건 입력</h2>
         <div className="field">
           <label htmlFor="principal">대출금액</label>
-          <input
-            id="principal"
-            type="number"
-            min="0"
-            step="1000000"
-            value={principal}
-            onChange={(e) => setPrincipal(Number(e.target.value))}
-            onKeyDown={(e) => e.key === "Enter" && calculate()}
-          />
-          <KoreanMoneyHint value={principal} />
+          <input id="principal" type="number" min="0" step="1000000" value={draft.principal}
+            onChange={(e) => setDraft((current) => ({ ...current, principal: Number(e.target.value) }))}
+            onKeyDown={(e) => e.key === "Enter" && calculate()} />
+          <KoreanMoneyHint value={draft.principal} />
         </div>
         <div className="field">
           <label htmlFor="rate">연 이자율 (%)</label>
-          <input
-            id="rate"
-            type="number"
-            min="0"
-            max="100"
-            step="0.1"
-            value={annualRate}
-            onChange={(e) => setAnnualRate(Number(e.target.value))}
-            onKeyDown={(e) => e.key === "Enter" && calculate()}
-          />
+          <input id="rate" type="number" min="0" max="100" step="0.1" value={draft.annualRate}
+            onChange={(e) => setDraft((current) => ({ ...current, annualRate: Number(e.target.value) }))}
+            onKeyDown={(e) => e.key === "Enter" && calculate()} />
         </div>
         <div className="field">
           <label htmlFor="years">대출기간 (년)</label>
-          <input
-            id="years"
-            type="number"
-            min="1"
-            max="50"
-            step="1"
-            value={years}
-            onChange={(e) => setYears(Number(e.target.value))}
-            onKeyDown={(e) => e.key === "Enter" && calculate()}
-          />
+          <input id="years" type="number" min="1" max="50" step="1" value={draft.years}
+            onChange={(e) => setDraft((current) => ({ ...current, years: Number(e.target.value) }))}
+            onKeyDown={(e) => e.key === "Enter" && calculate()} />
         </div>
         <div className="field">
           <label htmlFor="method">상환계획표에 적용할 방식</label>
-          <select id="method" value={method} onChange={(e) => setMethod(e.target.value as RepaymentMethod)}>
+          <select id="method" value={draft.method} onChange={(e) => setDraft((current) => ({ ...current, method: e.target.value as RepaymentMethod }))}>
             <option value="equal-payment">원리금균등상환</option>
             <option value="equal-principal">원금균등상환</option>
           </select>
         </div>
-        <button
-          className="primary"
-          type="button"
-          onClick={calculate}
-          disabled={!isValid}
-          style={{ width: "100%", marginTop: 4 }}
-        >
+        <button className="primary" type="button" onClick={calculate} disabled={!isValid} style={{ width: "100%", marginTop: 4 }}>
           대출 상환액 계산하기
         </button>
         {isDirty ? (
-          <div className="notice" style={{ marginTop: 12 }}>
-            입력값이 변경되었습니다. 계산하기 버튼을 누르면 오른쪽 결과가 새 조건으로 갱신됩니다.
-          </div>
+          <div className="notice" style={{ marginTop: 12 }}>입력값이 변경되었습니다. 계산하기 버튼을 누르면 오른쪽 결과가 새 조건으로 갱신됩니다.</div>
         ) : (
-          <div className="notice" style={{ marginTop: 12 }}>
-            두 상환방식은 아래에서 함께 비교합니다. 선택한 방식은 상세 결과와 무료 상환계획표에 적용됩니다.
-          </div>
+          <div className="notice" style={{ marginTop: 12 }}>두 상환방식은 아래에서 함께 비교합니다. 선택한 방식은 상세 결과와 무료 상환계획표에 적용됩니다.</div>
         )}
       </section>
 
       <section className="panel print-summary" aria-live="polite">
         <span className="category-label">STEP 2 · 계산 결과</span>
-        <div className="result-main">첫 달 {won.format(result.monthlyFirstPayment)}원</div>
+        <div className="result-main" data-testid="loan-first-payment">첫 달 {won.format(result.monthlyFirstPayment)}원</div>
         <div className="stats">
           <div className="stat"><small>총 상환액</small><strong>{won.format(result.totalPayment)}원</strong></div>
           <div className="stat"><small>총 이자</small><strong>{won.format(result.totalInterest)}원</strong></div>
           <div className="stat"><small>대출기간</small><strong>{months}개월</strong></div>
-          <div className="stat"><small>적용 이자율</small><strong>연 {applied.annualRate}%</strong></div>
+          <div className="stat"><small>적용 이자율</small><strong data-testid="loan-applied-rate">연 {applied.annualRate}%</strong></div>
           <div className="stat"><small>상환방식</small><strong>{methodLabel[applied.method]}</strong></div>
         </div>
         <div className="action-row no-print" style={{ gridTemplateColumns: "repeat(3,minmax(0,1fr))" }}>
@@ -198,28 +145,13 @@ export default function LoanCalculator() {
       </section>
 
       <section className="full-width" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16 }}>
-        <ToolChart
-          type="donut"
-          title="원금과 이자 구성"
-          description="선택한 상환방식의 총 상환액에서 원금과 이자가 차지하는 비중입니다."
+        <ToolChart type="donut" title="원금과 이자 구성" description="선택한 상환방식의 총 상환액에서 원금과 이자가 차지하는 비중입니다."
           data={[{ label: "대출 원금", value: applied.principal }, { label: "총 이자", value: result.totalInterest }]}
-          centerLabel={wonText(result.totalPayment)}
-          valueFormatter={wonText}
-        />
-        <ToolChart
-          type="bar"
-          title="상환방식 총이자 비교"
-          description="두 방식의 총이자를 같은 기준으로 비교합니다."
-          data={[{ label: "원리금균등", value: equalPayment.totalInterest }, { label: "원금균등", value: equalPrincipal.totalInterest }]}
-          valueFormatter={wonText}
-        />
-        <ToolChart
-          type="line"
-          title="남은 원금 감소 추이"
-          description="선택한 방식으로 상환할 때 남은 원금이 줄어드는 흐름입니다."
-          data={balanceTrend}
-          valueFormatter={wonText}
-        />
+          centerLabel={wonText(result.totalPayment)} valueFormatter={wonText} />
+        <ToolChart type="bar" title="상환방식 총이자 비교" description="두 방식의 총이자를 같은 기준으로 비교합니다."
+          data={[{ label: "원리금균등", value: equalPayment.totalInterest }, { label: "원금균등", value: equalPrincipal.totalInterest }]} valueFormatter={wonText} />
+        <ToolChart type="line" title="남은 원금 감소 추이" description="선택한 방식으로 상환할 때 남은 원금이 줄어드는 흐름입니다."
+          data={balanceTrend} valueFormatter={wonText} />
       </section>
 
       <section className="panel full-width comparison-panel">
@@ -229,27 +161,15 @@ export default function LoanCalculator() {
         </div>
         <div className="compare-grid">
           <article className={`compare-card ${applied.method === "equal-payment" ? "is-selected" : ""}`}>
-            <div className="compare-title-row">
-              <h3>원리금균등</h3>
-              <button className="text-button no-print" type="button" onClick={() => selectResultMethod("equal-payment")}>이 방식 선택</button>
-            </div>
-            <dl className="compare-values">
-              <div><dt>첫 달 상환액</dt><dd>{won.format(equalPayment.monthlyFirstPayment)}원</dd></div>
-              <div><dt>총이자</dt><dd>{won.format(equalPayment.totalInterest)}원</dd></div>
-            </dl>
+            <div className="compare-title-row"><h3>원리금균등</h3><button className="text-button no-print" type="button" onClick={() => selectResultMethod("equal-payment")}>이 방식 선택</button></div>
+            <dl className="compare-values"><div><dt>첫 달 상환액</dt><dd>{won.format(equalPayment.monthlyFirstPayment)}원</dd></div><div><dt>총이자</dt><dd>{won.format(equalPayment.totalInterest)}원</dd></div></dl>
             <div className="metric"><div className="metric-label"><span>총이자 규모</span><strong>{Math.round(equalPayment.totalInterest / comparisonMaxInterest * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPayment.totalInterest / comparisonMaxInterest * 100}%` }} /></div></div>
             <div className="metric"><div className="metric-label"><span>첫 달 부담</span><strong>{Math.round(equalPayment.monthlyFirstPayment / comparisonMaxFirstPayment * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPayment.monthlyFirstPayment / comparisonMaxFirstPayment * 100}%` }} /></div></div>
             <p>매월 상환액이 거의 일정해 월별 현금흐름을 관리하기 편한 방식입니다.</p>
           </article>
           <article className={`compare-card ${applied.method === "equal-principal" ? "is-selected" : ""}`}>
-            <div className="compare-title-row">
-              <h3>원금균등</h3>
-              <button className="text-button no-print" type="button" onClick={() => selectResultMethod("equal-principal")}>이 방식 선택</button>
-            </div>
-            <dl className="compare-values">
-              <div><dt>첫 달 상환액</dt><dd>{won.format(equalPrincipal.monthlyFirstPayment)}원</dd></div>
-              <div><dt>총이자</dt><dd>{won.format(equalPrincipal.totalInterest)}원</dd></div>
-            </dl>
+            <div className="compare-title-row"><h3>원금균등</h3><button className="text-button no-print" type="button" onClick={() => selectResultMethod("equal-principal")}>이 방식 선택</button></div>
+            <dl className="compare-values"><div><dt>첫 달 상환액</dt><dd>{won.format(equalPrincipal.monthlyFirstPayment)}원</dd></div><div><dt>총이자</dt><dd>{won.format(equalPrincipal.totalInterest)}원</dd></div></dl>
             <div className="metric"><div className="metric-label"><span>총이자 규모</span><strong>{Math.round(equalPrincipal.totalInterest / comparisonMaxInterest * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPrincipal.totalInterest / comparisonMaxInterest * 100}%` }} /></div></div>
             <div className="metric"><div className="metric-label"><span>첫 달 부담</span><strong>{Math.round(equalPrincipal.monthlyFirstPayment / comparisonMaxFirstPayment * 100)}%</strong></div><div className="metric-track"><span style={{ width: `${equalPrincipal.monthlyFirstPayment / comparisonMaxFirstPayment * 100}%` }} /></div></div>
             <p>초기 상환액은 더 크지만 원금이 빠르게 줄어 총이자가 적어질 수 있습니다.</p>
@@ -265,14 +185,12 @@ export default function LoanCalculator() {
         </div>
         <p className="section-intro no-print">화면에는 초기 24개월을 먼저 보여드립니다. CSV에는 전체 기간이 포함되며, 인쇄/PDF에서는 전체 상환계획표를 출력합니다.</p>
         <div className="table-wrap screen-schedule">
-          <table>
-            <thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
+          <table><thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
             <tbody>{result.schedule.slice(0, 24).map((row) => (<tr key={row.month}><td>{row.month}개월</td><td>{won.format(row.payment)}원</td><td>{won.format(row.principal)}원</td><td>{won.format(row.interest)}원</td><td>{won.format(row.balance)}원</td></tr>))}</tbody>
           </table>
         </div>
         <div className="table-wrap print-only print-schedule">
-          <table>
-            <thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
+          <table><thead><tr><th>회차</th><th>상환액</th><th>원금</th><th>이자</th><th>남은 원금</th></tr></thead>
             <tbody>{result.schedule.map((row) => (<tr key={row.month}><td>{row.month}</td><td>{won.format(row.payment)}</td><td>{won.format(row.principal)}</td><td>{won.format(row.interest)}</td><td>{won.format(row.balance)}</td></tr>))}</tbody>
           </table>
         </div>

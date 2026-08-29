@@ -48,4 +48,4 @@ jobs:
           path: calculator-execution-audit.json
           if-no-files-found: warn
       # Full audit includes the dedicated loan-rate regression and capped/dependent-input scenarios.
-      # Final verification rerun after the direct loan-result fix.
+      # Final verification after keyed primary loan result refresh.

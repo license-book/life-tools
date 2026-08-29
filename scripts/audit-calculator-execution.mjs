@@ -13,6 +13,15 @@ const routes = Object.keys(manifest.routes || {})
 const normalize = (text) => (text || "").replace(/\s+/g, " ").trim();
 const isActionButton = (text) => /계산|변환|확인|실행/.test(text) && !/초기화|인쇄|PDF|CSV|저장|선택/.test(text);
 
+// Some inputs are capped, rounded, or inactive until another field is non-zero.
+// Use meaningful values that are guaranteed to exercise each calculation branch.
+const specialNumericValues = new Map([
+  ["/tools/cashback-price:1", "1"],
+  ["/tools/wallpaper-quantity:2", "100"],
+  ["/tools/weekly-holiday-pay:1", "20"],
+  ["/tools/weekly-pay:4", "2.5"],
+]);
+
 async function resultText(page) {
   return normalize(await page.locator(".tool-layout").evaluate((root) => {
     const children = Array.from(root.children);
@@ -47,16 +56,29 @@ async function testOneMutation(page, route, mutation) {
   const layout = page.locator(".tool-layout");
   if (!(await layout.count())) return { status: "SKIP", reason: "no .tool-layout", mutation };
   await page.waitForTimeout(60);
-  const action = await getAction(page);
+  let action = await getAction(page);
   if (!action) return { status: "FAIL", reason: "execution button missing", mutation };
   const firstPanel = layout.locator(":scope > *").first();
-  const before = await resultText(page);
+  let before = await resultText(page);
+
+  // Weekly-pay multiplier has no mathematical effect while extra-hours is zero.
+  // Activate extra-hours first, apply it, then independently verify the multiplier.
+  if (route === "/tools/weekly-pay" && mutation.kind === "number" && mutation.index === 4) {
+    const extraHours = firstPanel.locator('input[type="number"]:not([disabled])').nth(3);
+    await extraHours.fill("5");
+    await extraHours.blur();
+    action = await getAction(page);
+    await action.click();
+    await page.waitForTimeout(120);
+    before = await resultText(page);
+  }
 
   if (mutation.kind === "number") {
     const input = firstPanel.locator('input[type="number"]:not([disabled])').nth(mutation.index);
     if (!(await input.count()) || !(await input.isVisible())) return { status: "SKIP", reason: "number input unavailable", mutation };
     const raw = await input.inputValue();
-    const next = nextNumericValue(raw, await input.getAttribute("min"), await input.getAttribute("max"));
+    const special = specialNumericValues.get(`${route}:${mutation.index}`);
+    const next = special ?? nextNumericValue(raw, await input.getAttribute("min"), await input.getAttribute("max"));
     await input.fill(next);
     await input.blur();
     mutation = { ...mutation, before: raw, after: next };

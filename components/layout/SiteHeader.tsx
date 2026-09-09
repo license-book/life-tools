@@ -29,10 +29,21 @@ export default function SiteHeader() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+
+    // Route navigation can preserve the previous page's header state briefly.
+    // Reset it first, then re-check after Next.js restores the new page position.
+    setMenuOpen(false);
+    setHovered(false);
+    setScrolled(false);
+
+    const frame = window.requestAnimationFrame(onScroll);
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [pathname]);
 
   const overlay = supportsOverlay && !scrolled && !menuOpen && !hovered;
   const toolSlug = pathname.startsWith("/tools/") ? pathname.split("/")[2] : "";
